@@ -1,23 +1,18 @@
 import axios from "axios";
 
-/**
- * Axios instance configured for the YohPal-Hustle backend API.
- * 
- * The base URL is read from the NEXT_PUBLIC_API_BASE_URL environment variable.
- * All requests use JSON content type and include credentials for session handling.
+/*
+ * Axios instance configured for the YohPal-Hustle firbase API.
  */
-const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api",
+const firebaseClient = axios.create({
+  // This is the BASE for all Firebase Auth REST operations
+  baseURL: "https://identitytoolkit.googleapis.com/v1", 
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
   },
-  withCredentials: true,
 });
-
-// ─── Request Interceptor ───────────────────────────────────────────────────
-apiClient.interceptors.request.use(
+// ─── Request Interceptor ───
+firebaseClient.interceptors.request.use(
   (config) => {
     // Attach auth token if available (e.g. from localStorage or a cookie)
     if (typeof window !== "undefined") {
@@ -31,8 +26,8 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ─── Response Interceptor ──────────────────────────────────────────────────
-apiClient.interceptors.response.use(
+// ─── Response Interceptor ──
+firebaseClient.interceptors.response.use(
   (response) => response,
   (error) => {
     // Global error handling: log unexpected server errors
@@ -46,4 +41,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export default firebaseClient;
