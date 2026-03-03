@@ -1,36 +1,48 @@
-import apiClient from "@/lib/axios";
-import type { RegisterInput } from "@/lib/validations/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import firebaseApp from "@/services/server/firebase";
+import type { RegisterPayload } from "@/lib/validations/auth";
+import { createUserProfile } from "@/actions/auth";
 
-// ─── Types ────────────────────────────────────────────────────────────────
+const auth = getAuth(firebaseApp);
 
-export interface RegisterPayload
-  extends Omit<RegisterInput, "confirmPassword" | "agreeToTerms"> {}
+export async function completeUserRegistration(userId: string, userData: any): Promise<any> {
+  const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
+  if (token && typeof window !== "undefined") {
+    localStorage.setItem("auth_token", token);
+  }
 
-export interface RegisterResponse {
-  success: boolean;
-  message: string;
-  data: {
-    userId: string;
-    email: string;
-    phoneNumber: string;
-    verificationRequired: boolean;
-  };
+  // Create user document in Firestore via server action
+  const result = await createUserProfile(userId, {
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    username: userData.username,
+    email: userData.email,
+    phoneNumber: userData.phoneNumber || "",
+    referralCode: userData.referralCode,
+  });
+
+  return result;
 }
 
-// ─── Auth API ─────────────────────────────────────────────────────────────
+export async function authenticateEmailAndPassword(
+  email: string,
+  password: string
+): Promise<any> {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-/**
- * Registers a new user account.
- *
- * @param payload - Registration form data (excludes `confirmPassword` and `agreeToTerms`).
- * @returns The server response, including the user ID and whether verification is required.
- */
-export async function registerUser(
-  payload: RegisterPayload
-): Promise<RegisterResponse> {
-  const { data } = await apiClient.post<RegisterResponse>(
-    "/auth/register",
-    payload
-  );
-  return data;
+  const token = await userCredential.user.getIdToken();
+  if (typeof window !== "undefined") {
+    localStorage.setItem("auth_token", token);
+  }
+
+  return {
+    success: true,
+    message: "Authentication successful",
+    data: {
+      userId: userCredential.user.uid,
+      email: userCredential.user.email,
+      phoneNumber: "",
+      verificationRequired: false,
+    },
+  };
 }
