@@ -1,275 +1,378 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
-  Briefcase,
   Star,
-  ClipboardList,
   ChevronRight,
-  CheckCircle2,
-  Wallet,
   TrendingUp,
+  MapPin,
+  LayoutGrid,
+  Activity,
+  Users,
+  Clock,
+  RefreshCw,
+  Briefcase,
+  ClipboardList,
+  CheckCircle2,
+  UtensilsCrossed,
+  Wrench,
+  CalendarDays,
+  ShoppingBag,
+  Truck,
+  Leaf,
+  CheckCheck,
+  XCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { useLocationCity } from "@/hooks/useLocationCity";
+import { getHustlerDashboardStats, getJobRequests, acceptJobRequest, rejectJobRequest } from "@/services/client/dashboard";
+import type { DashboardStats, JobRequest } from "@/types/actions/dashboard.types";
 
-import JobRequestCard from "@/components/custom/app/dashboard/JobRequestCard";
-import EarningsChart from "@/components/custom/app/dashboard/EarningsChart";
-import StatsCard from "@/components/custom/app/dashboard/StatsCard";
-
-// ── Mock data (replace with real API calls from services/client/dashboard.ts) ──
-const MOCK_STATS = {
-  totalEarnings: 48200,
-  jobsDone: 34,
-  activeJobs: 2,
-  rating: 4.8,
-  reviewCount: 27,
-  pendingRequests: 3,
-  currency: "KES",
-};
-
-const MOCK_JOBS: MockJob[] = [
-  {
-    jobId: "j1",
-    jobName: "Fix Kitchen Sink Pipe",
-    clientName: "Alice Mwangi",
-    location: "Westlands, Nairobi",
-    time: "Today 10:00 AM",
-    amount: 3500,
-    currency: "KES",
-    status: "pending",
-    skill: "Plumbing",
-  },
-  {
-    jobId: "j2",
-    jobName: "Rewire Living Room",
-    clientName: "Brian Omondi",
-    location: "Kilimani, Nairobi",
-    time: "Tomorrow 9:00 AM",
-    amount: 7800,
-    currency: "KES",
-    status: "pending",
-    skill: "Electrical",
-  },
-  {
-    jobId: "j3",
-    jobName: "Deep House Cleaning",
-    clientName: "Carol Njeri",
-    location: "Karen, Nairobi",
-    time: "Mon 2:00 PM",
-    amount: 2500,
-    currency: "KES",
-    status: "accepted",
-    skill: "Cleaning",
-  },
-];
-
-type JobStatus = "pending" | "accepted" | "rejected" | "completed";
-interface MockJob {
-  jobId: string;
-  jobName: string;
-  clientName: string;
-  location: string;
-  time: string;
-  amount: number;
-  currency: string;
-  status: JobStatus;
-  skill: string;
-}
+// ── Temporary mock hustler id / token until auth is wired ───────
+const MOCK_HUSTLER_ID = "demo-hustler-1";
+const MOCK_TOKEN = "";
 
 type FilterTab = "All" | "Pending" | "Accepted" | "Completed";
 
 export default function Dashboard() {
-  const [jobs, setJobs] = useState(MOCK_JOBS);
+  const { city, loading: locationLoading } = useLocationCity();
+
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [jobs, setJobs] = useState<JobRequest[]>([]);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [jobsLoading, setJobsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<FilterTab>("All");
-  const stats = MOCK_STATS;
 
-  function handleAccept(jobId: string) {
-    setJobs((prev) =>
-      prev.map((j) => (j.jobId === jobId ? { ...j, status: "accepted" } : j))
-    );
+  // ── Fetch dashboard stats ───────────────────────────────────
+  const loadStats = useCallback(async () => {
+    try {
+      setStatsLoading(true);
+      const data = await getHustlerDashboardStats(MOCK_HUSTLER_ID, MOCK_TOKEN);
+      setStats(data);
+    } catch {
+      // keep null → skeleton stays shown
+    } finally {
+      setStatsLoading(false);
+    }
+  }, []);
+
+  // ── Fetch job requests ──────────────────────────────────────
+  const loadJobs = useCallback(async () => {
+    try {
+      setJobsLoading(true);
+      const data = await getJobRequests(MOCK_HUSTLER_ID, MOCK_TOKEN);
+      setJobs(data);
+    } catch {
+      setJobs([]);
+    } finally {
+      setJobsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadStats();
+    loadJobs();
+  }, [loadStats, loadJobs]);
+
+  // ── Optimistic accept / reject ──────────────────────────────
+  async function handleAccept(jobId: string) {
+    setJobs((prev) => prev.map((j) => j.jobId === jobId ? { ...j, status: "accepted" as const } : j));
+    try { await acceptJobRequest(jobId, MOCK_HUSTLER_ID, MOCK_TOKEN); }
+    catch { setJobs((prev) => prev.map((j) => j.jobId === jobId ? { ...j, status: "pending" as const } : j)); }
   }
 
-  function handleReject(jobId: string) {
-    setJobs((prev) =>
-      prev.map((j) => (j.jobId === jobId ? { ...j, status: "rejected" } : j))
-    );
+  async function handleReject(jobId: string) {
+    setJobs((prev) => prev.map((j) => j.jobId === jobId ? { ...j, status: "rejected" as const } : j));
+    try { await rejectJobRequest(jobId, MOCK_HUSTLER_ID, MOCK_TOKEN); }
+    catch { setJobs((prev) => prev.map((j) => j.jobId === jobId ? { ...j, status: "pending" as const } : j)); }
   }
 
-  const pendingCount = jobs.filter((j) => j.status === "pending").length;
+
+  // ── Derived counts ──────────────────────────────────────────
+  const allCount       = jobs.length;
+  const ongoingCount   = jobs.filter((j) => j.status === "accepted").length;
+  const openCount      = jobs.filter((j) => j.status === "pending").length;
+  const completedCount = jobs.filter((j) => j.status === "completed").length;
+  const pendingCount   = openCount;
 
   const filteredJobs = jobs.filter((j) => {
-    if (activeTab === "All") return true;
-    if (activeTab === "Pending") return j.status === "pending";
-    if (activeTab === "Accepted") return j.status === "accepted";
+    if (activeTab === "All")       return true;
+    if (activeTab === "Pending")   return j.status === "pending";
+    if (activeTab === "Accepted")  return j.status === "accepted";
     if (activeTab === "Completed") return j.status === "completed";
     return true;
   });
 
+  // ── Skeleton box ─────────────────────────────────────────────
+  const Skel = ({ w = "w-full", h = "h-5" }: { w?: string; h?: string }) => (
+    <div className={`${w} ${h} rounded-lg bg-white/20 animate-pulse`} />
+  );
+
   return (
-    <div className="px-4 pt-4 pb-6 space-y-4 max-w-lg mx-auto lg:max-w-3xl">
+    <div className="px-4 pt-4 pb-6 space-y-5 max-w-lg mx-auto lg:max-w-3xl">
 
-          {/* ── HERO: Earnings Card ── */}
-          <div
-            className="rounded-3xl p-5 text-white relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
-          >
-            {/* Decorative background circles */}
-            <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/5" />
-            <div className="absolute -bottom-12 -left-8 w-52 h-52 rounded-full bg-white/5" />
-            <div className="absolute top-1/2 right-10 w-24 h-24 rounded-full bg-white/5 -translate-y-1/2" />
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <div
+        className="rounded-3xl p-5 text-white relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
+      >
+        <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/5" />
+        <div className="absolute -bottom-12 -left-8 w-52 h-52 rounded-full bg-white/5" />
 
-            <div className="relative z-10">
-              {/* Top row: greeting + availability badge */}
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-white/65 text-[12px] font-medium">Welcome back 👋</p>
-                  <p className="text-white font-bold text-[16px] mt-0.5">Your Hustle Space</p>
-                </div>
-                <div className="bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1.5 border border-white/10">
-                  <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
-                  <span className="text-[11px] text-white font-semibold">Available</span>
-                </div>
-              </div>
-
-              {/* Big earnings figure */}
-              <div className="mb-5">
-                <p className="text-white/50 text-[10px] uppercase tracking-widest font-semibold">
-                  Total Earnings
+        <div className="relative z-10">
+          {/* Top row */}
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <p className="text-white/65 text-[12px] font-medium">Welcome back 👋</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <MapPin size={13} className="text-white/70" />
+                <p className="text-white font-bold text-[16px]">
+                  {locationLoading ? "Locating…" : city ?? "Your Hustle Space"}
                 </p>
-                <p className="text-[40px] font-black text-white mt-1 leading-none tracking-tight">
-                  {stats.currency} {stats.totalEarnings.toLocaleString()}
-                </p>
-                <div className="flex items-center gap-1.5 mt-2">
-                  <TrendingUp size={13} className="text-green-300" />
-                  <p className="text-green-300 text-[12px] font-semibold">
-                    12% growth this month
-                  </p>
-                </div>
-              </div>
-
-              {/* Mini stats row inside hero */}
-              <div className="flex pt-4 border-t border-white/15">
-                <div className="flex-1 flex flex-col items-center gap-1 border-r border-white/10">
-                  <Briefcase size={14} className="text-white/50" />
-                  <span className="text-[18px] font-black text-white leading-none">
-                    {stats.jobsDone}
-                  </span>
-                  <span className="text-[10px] text-white/50 font-medium">Jobs Done</span>
-                </div>
-                <div className="flex-1 flex flex-col items-center gap-1 border-r border-white/10">
-                  <Star size={14} className="text-yellow-300" />
-                  <span className="text-[18px] font-black text-white leading-none">
-                    {stats.rating}
-                  </span>
-                  <span className="text-[10px] text-white/50 font-medium">Rating</span>
-                </div>
-                <div className="flex-1 flex flex-col items-center gap-1">
-                  <ClipboardList size={14} className="text-white/50" />
-                  <span className="text-[18px] font-black text-white leading-none">
-                    {pendingCount}
-                  </span>
-                  <span className="text-[10px] text-white/50 font-medium">Pending</span>
-                </div>
               </div>
             </div>
-          </div>
-
-          {/* ── Stats Grid (2×2) ── */}
-          <div className="grid grid-cols-2 gap-3">
-            <StatsCard
-              label="Jobs Done"
-              value={String(stats.jobsDone)}
-              icon={CheckCircle2}
-              iconBg="bg-teal-50"
-              iconColor="text-teal-600"
-              sub={`${stats.activeJobs} active now`}
-              subColor="text-teal-600"
-            />
-            <StatsCard
-              label="Your Rating"
-              value={`${stats.rating} ★`}
-              icon={Star}
-              iconBg="bg-amber-50"
-              iconColor="text-amber-500"
-              sub={`${stats.reviewCount} reviews`}
-              subColor="text-amber-500"
-            />
-            <StatsCard
-              label="Job Requests"
-              value={String(stats.pendingRequests)}
-              icon={ClipboardList}
-              iconBg="bg-red-50"
-              iconColor="text-[#94041d]"
-              sub={pendingCount > 0 ? `${pendingCount} need response` : "All handled"}
-              subColor="text-[#94041d]"
-            />
-            <StatsCard
-              label="Balance"
-              value="KES"
-              icon={Wallet}
-              iconBg="bg-blue-50"
-              iconColor="text-blue-500"
-              sub={stats.totalEarnings.toLocaleString()}
-              subColor="text-blue-500"
-            />
-          </div>
-
-          {/* ── Earnings Chart ── */}
-          <EarningsChart />
-
-          {/* ── Job Requests ── */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[15px] font-bold text-gray-800">Job Requests</h3>
-              <Link
-                href="/myjobs"
-                className="flex items-center text-[12px] text-[#94041d] font-semibold gap-0.5 hover:opacity-75 transition-opacity"
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { loadStats(); loadJobs(); }}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
               >
-                View All <ChevronRight size={13} />
-              </Link>
+                <RefreshCw size={13} className="text-white/70" />
+              </button>
+              <div className="bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1.5 border border-white/10">
+                <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+                <span className="text-[11px] text-white font-semibold">Available</span>
+              </div>
             </div>
+          </div>
 
-            {/* Filter tabs */}
-            <div className="flex gap-2 mb-3 overflow-x-auto pb-1 scrollbar-none">
-              {(["All", "Pending", "Accepted", "Completed"] as FilterTab[]).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-3.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all ${
-                    activeTab === tab
-                      ? "bg-[#94041d] text-white shadow-sm"
-                      : "bg-white text-gray-400 border border-gray-200"
-                  }`}
-                >
-                  {tab}
-                  {tab === "Pending" && pendingCount > 0 && activeTab === "Pending" && (
-                    <span className="ml-1.5 bg-white/25 text-white rounded-full px-1.5 py-0.5 text-[10px]">
-                      {pendingCount}
-                    </span>
+          {/* ── Horizontal scroll panels ─────────────────────── */}
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-1 -mx-1 px-1">
+
+            {/* ── Panel 1 · Task Summary ── */}
+            <div className="snap-start flex-shrink-0 w-[calc(100%-2rem)]">
+              <div className="flex items-center gap-1.5 mb-3">
+                <LayoutGrid size={13} className="text-white/60" />
+                <p className="text-white/60 text-[11px] font-semibold uppercase tracking-wider">Task Summary</p>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {/* All */}
+                <div className="bg-white/10 rounded-2xl p-3 flex flex-col items-center gap-1 border border-white/10">
+                  <Briefcase size={15} className="text-white/60" />
+                  {jobsLoading ? <Skel w="w-8" h="h-6" /> : (
+                    <span className="text-[22px] font-black text-white leading-none">{allCount}</span>
                   )}
-                </button>
-              ))}
+                  <span className="text-[10px] text-white/50 font-medium">All</span>
+                </div>
+                {/* Ongoing */}
+                <div className="bg-white/10 rounded-2xl p-3 flex flex-col items-center gap-1 border border-white/10">
+                  <Activity size={15} className="text-green-300" />
+                  {jobsLoading ? <Skel w="w-8" h="h-6" /> : (
+                    <span className="text-[22px] font-black text-white leading-none">{ongoingCount}</span>
+                  )}
+                  <span className="text-[10px] text-white/50 font-medium">Ongoing</span>
+                </div>
+                {/* Open */}
+                <div className="bg-white/10 rounded-2xl p-3 flex flex-col items-center gap-1 border border-white/10">
+                  <ClipboardList size={15} className="text-yellow-300" />
+                  {jobsLoading ? <Skel w="w-8" h="h-6" /> : (
+                    <span className="text-[22px] font-black text-white leading-none">{openCount}</span>
+                  )}
+                  <span className="text-[10px] text-white/50 font-medium">Open</span>
+                </div>
+              </div>
             </div>
 
-            {/* Job Cards */}
-            <div className="space-y-3">
-              {filteredJobs.length === 0 ? (
-                <div className="bg-white rounded-2xl p-8 text-center border border-gray-100">
-                  <Briefcase size={32} className="text-gray-200 mx-auto mb-2" />
-                  <p className="text-sm text-gray-400">No {activeTab.toLowerCase()} jobs</p>
+            {/* ── Panel 2 · Weekly Analytics ── */}
+            <div className="snap-start flex-shrink-0 w-[calc(100%-2rem)]">
+              <div className="flex items-center gap-1.5 mb-3">
+                <TrendingUp size={13} className="text-white/60" />
+                <p className="text-white/60 text-[11px] font-semibold uppercase tracking-wider">Your Weekly Analytics</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {/* Jobs */}
+                <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                  <p className="text-white/50 text-[10px] uppercase tracking-widest font-semibold mb-1">Jobs</p>
+                  {statsLoading ? <Skel w="w-12" h="h-8" /> : (
+                    <p className="text-[28px] font-black text-white leading-none">{stats?.jobsDone ?? "—"}</p>
+                  )}
+                  <div className="flex items-center gap-1 mt-1.5">
+                    <CheckCircle2 size={11} className="text-green-300" />
+                    <span className="text-[10px] text-green-300 font-medium">
+                      {statsLoading ? "…" : `${stats?.activeJobs ?? 0} active`}
+                    </span>
+                  </div>
                 </div>
-              ) : (
-                filteredJobs.map((job) => (
-                  <JobRequestCard
-                    key={job.jobId}
-                    {...job}
-                    onAccept={handleAccept}
-                    onReject={handleReject}
-                  />
-                ))
-              )}
+                {/* Rating */}
+                <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                  <p className="text-white/50 text-[10px] uppercase tracking-widest font-semibold mb-1">Rating</p>
+                  {statsLoading ? <Skel w="w-12" h="h-8" /> : (
+                    <p className="text-[28px] font-black text-white leading-none">{stats?.rating ?? "—"}</p>
+                  )}
+                  <div className="flex items-center gap-1 mt-1.5">
+                    <Star size={11} className="text-yellow-300 fill-yellow-300" />
+                    <span className="text-[10px] text-yellow-300 font-medium">
+                      {statsLoading ? "…" : `${stats?.reviewCount ?? 0} reviews`}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {/* ── Panel 3 · Client Insights ── */}
+            <div className="snap-start flex-shrink-0 w-[calc(100%-2rem)]">
+              <div className="flex items-center gap-1.5 mb-3">
+                <Users size={13} className="text-white/60" />
+                <p className="text-white/60 text-[11px] font-semibold uppercase tracking-wider">Client Insights</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {/* Completed */}
+                <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                  <p className="text-white/50 text-[10px] uppercase tracking-widest font-semibold mb-1">Completed</p>
+                  {jobsLoading ? <Skel w="w-12" h="h-8" /> : (
+                    <p className="text-[28px] font-black text-white leading-none">{completedCount}</p>
+                  )}
+                  <div className="flex items-center gap-1 mt-1.5">
+                    <CheckCircle2 size={11} className="text-green-300" />
+                    <span className="text-[10px] text-green-300 font-medium">Done</span>
+                  </div>
+                </div>
+                {/* Pending */}
+                <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                  <p className="text-white/50 text-[10px] uppercase tracking-widest font-semibold mb-1">Pending</p>
+                  {jobsLoading ? <Skel w="w-12" h="h-8" /> : (
+                    <p className="text-[28px] font-black text-white leading-none">{pendingCount}</p>
+                  )}
+                  <div className="flex items-center gap-1 mt-1.5">
+                    <Clock size={11} className="text-yellow-300" />
+                    <span className="text-[10px] text-yellow-300 font-medium">Awaiting</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>{/* end scroll panels */}
+
+          {/* Scroll dots */}
+          <div className="flex justify-center gap-1.5 mt-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className={`rounded-full bg-white/30 ${i === 0 ? "w-4 h-1.5" : "w-1.5 h-1.5"}`} />
+            ))}
           </div>
         </div>
+      </div>
+
+      {/* ── Services ─────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-[15px] font-bold text-gray-800 dark:text-white">Services</h3>
+          <Link
+            href="/viewall/services"
+            className="flex items-center text-[12px] text-[#94041d] font-semibold gap-0.5 hover:opacity-75 transition-opacity"
+          >
+            View All <ChevronRight size={13} />
+          </Link>
+        </div>
+
+        <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1 -mx-4 px-4">
+          {([
+            { label: "Food",         icon: UtensilsCrossed, bg: "bg-orange-50",  ring: "border-orange-100", color: "text-orange-500" },
+            { label: "Trades",       icon: Wrench,          bg: "bg-blue-50",    ring: "border-blue-100",   color: "text-blue-500" },
+            { label: "Events",       icon: CalendarDays,    bg: "bg-purple-50",  ring: "border-purple-100", color: "text-purple-500" },
+            { label: "Retail",       icon: ShoppingBag,     bg: "bg-pink-50",    ring: "border-pink-100",   color: "text-pink-500" },
+            { label: "Transport",    icon: Truck,           bg: "bg-teal-50",    ring: "border-teal-100",   color: "text-teal-500" },
+            { label: "Environment",  icon: Leaf,            bg: "bg-green-50",   ring: "border-green-100",  color: "text-green-500" },
+          ] as const).map(({ label, icon: Icon, bg, ring, color }) => (
+            <button
+              key={label}
+              className={`flex-shrink-0 flex flex-col items-center gap-2 w-[72px] py-3.5 rounded-2xl border ${bg} ${ring} dark:bg-gray-800 dark:border-gray-700 active:scale-95 transition-transform`}
+            >
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center bg-white dark:bg-gray-700 shadow-sm border ${ring} dark:border-gray-600`}>
+                <Icon size={17} className={color} />
+              </div>
+              <span className="text-[11px] font-semibold text-gray-600 dark:text-gray-300 leading-tight text-center">{label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Recent Activities ────────────────────────────────── */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-[15px] font-bold text-gray-800 dark:text-white">Recent Activities</h3>
+          <button className="flex items-center text-[12px] text-[#94041d] font-semibold gap-0.5 hover:opacity-75 transition-opacity">
+            View All <ChevronRight size={13} />
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {jobsLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl p-3.5 border border-gray-100 dark:border-gray-700 animate-pulse flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-700 flex-shrink-0" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-3.5 bg-gray-100 dark:bg-gray-700 rounded-lg w-2/3" />
+                  <div className="h-3 bg-gray-100 dark:bg-gray-700 rounded-lg w-1/3" />
+                </div>
+                <div className="h-3 bg-gray-100 dark:bg-gray-700 rounded-lg w-10" />
+              </div>
+            ))
+          ) : jobs.length === 0 ? (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center border border-gray-100 dark:border-gray-700">
+              <Activity size={28} className="text-gray-200 dark:text-gray-600 mx-auto mb-2" />
+              <p className="text-sm text-gray-400 dark:text-gray-500">No recent activity yet</p>
+            </div>
+          ) : (
+            [...jobs]
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .slice(0, 5)
+              .map((job) => {
+                const isCompleted = job.status === "completed";
+                const isPending   = job.status === "pending";
+                const isAccepted  = job.status === "accepted";
+                const isRejected  = job.status === "rejected";
+
+                const dotColor = isCompleted ? "bg-green-400" : isAccepted ? "bg-blue-400" : isPending ? "bg-yellow-400" : "bg-gray-300";
+                const iconEl   = isCompleted ? <CheckCheck size={15} className="text-green-500" />
+                               : isRejected  ? <XCircle    size={15} className="text-gray-400" />
+                               : isAccepted  ? <Activity   size={15} className="text-blue-500" />
+                               :               <Clock      size={15} className="text-yellow-500" />;
+                const badgeStyle = isCompleted ? "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                                 : isAccepted  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                                 : isPending   ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400"
+                                 :               "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500";
+
+                return (
+                  <div key={job.jobId} className="bg-white dark:bg-gray-800 rounded-2xl p-3.5 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center gap-3">
+                    {/* Icon */}
+                    <div className="w-9 h-9 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center flex-shrink-0">
+                      {iconEl}
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-semibold text-gray-800 dark:text-white truncate">{job.jobName}</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <div className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+                        <p className="text-[11px] text-gray-400 dark:text-gray-500">{job.clientName}</p>
+                      </div>
+                    </div>
+
+                    {/* Badge + time */}
+                    <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize ${badgeStyle}`}>
+                        {job.status}
+                      </span>
+                      <span className="text-[10px] text-gray-400 dark:text-gray-500">
+                        {new Date(job.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })
+          )}
+        </div>
+      </div>
+
+    </div>
   );
 }
