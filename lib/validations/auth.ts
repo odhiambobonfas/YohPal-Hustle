@@ -45,3 +45,9 @@ export const registerSchema = z
   });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+export type RegisterPayload = {
+  email: string;
+  password: string;
+  phoneNumber: string;
+};
