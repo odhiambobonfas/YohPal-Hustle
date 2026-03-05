@@ -1,17 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { authenticateEmailAndPassword } from "@/services/client/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    const emailFromQuery = searchParams.get("email");
+    if (emailFromQuery) {
+      setFormData((prev) => ({
+        ...prev,
+        email: emailFromQuery,
+      }));
+    }
+  }, [searchParams]);
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +38,7 @@ export default function LoginPage() {
     if (error) setError(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
@@ -35,7 +46,7 @@ export default function LoginPage() {
     try {
       const response = await authenticateEmailAndPassword(
         formData.email,
-        formData.password,
+        formData.password
       );
 
       if (response.success) {
@@ -49,7 +60,7 @@ export default function LoginPage() {
       console.error("Login error:", err);
       setError(
         err.response?.data?.error?.message ||
-          "An error occurred during login. Please try again.",
+          "An error occurred during login. Please check your credentials and try again."
       );
     } finally {
       setIsLoading(false);
@@ -94,12 +105,6 @@ export default function LoginPage() {
             <label className="text-xs font-bold text-black uppercase">
               Password
             </label>
-            <Link
-              href="/forgot-password"
-              className="text-xs font-bold text-[#f44236] hover:underline underline-offset-2"
-            >
-              FORGOT?
-            </Link>
           </div>
           <div className="relative">
             <input
@@ -135,6 +140,12 @@ export default function LoginPage() {
             "Login"
           )}
         </button>
+        <Link
+          href="/forgot-password"
+          className="text-xs font-bold text-[#f44236] hover:underline underline-offset-2"
+        >
+          Forgot password?
+        </Link>
       </form>
 
       <div className="text-center pt-4">
