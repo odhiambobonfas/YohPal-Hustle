@@ -275,22 +275,23 @@ export default function Dashboard() {
 
         <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1 -mx-4 px-4">
           {([
-            { label: "Food",         icon: UtensilsCrossed, bg: "bg-orange-50",  ring: "border-orange-100", color: "text-orange-500" },
-            { label: "Trades",       icon: Wrench,          bg: "bg-blue-50",    ring: "border-blue-100",   color: "text-blue-500" },
-            { label: "Events",       icon: CalendarDays,    bg: "bg-purple-50",  ring: "border-purple-100", color: "text-purple-500" },
-            { label: "Retail",       icon: ShoppingBag,     bg: "bg-pink-50",    ring: "border-pink-100",   color: "text-pink-500" },
-            { label: "Transport",    icon: Truck,           bg: "bg-teal-50",    ring: "border-teal-100",   color: "text-teal-500" },
-            { label: "Environment",  icon: Leaf,            bg: "bg-green-50",   ring: "border-green-100",  color: "text-green-500" },
-          ] as const).map(({ label, icon: Icon, bg, ring, color }) => (
-            <button
+            { label: "Food",         category: "Food",        icon: UtensilsCrossed, bg: "bg-orange-50",  ring: "border-orange-100", color: "text-orange-500" },
+            { label: "Trades",       category: "Trades",      icon: Wrench,          bg: "bg-blue-50",    ring: "border-blue-100",   color: "text-blue-500" },
+            { label: "Events",       category: "Events",      icon: CalendarDays,    bg: "bg-purple-50",  ring: "border-purple-100", color: "text-purple-500" },
+            { label: "Retail",       category: "Retail",      icon: ShoppingBag,     bg: "bg-pink-50",    ring: "border-pink-100",   color: "text-pink-500" },
+            { label: "Transport",    category: "Transport",   icon: Truck,           bg: "bg-teal-50",    ring: "border-teal-100",   color: "text-teal-500" },
+            { label: "Environment",  category: "Environment", icon: Leaf,            bg: "bg-green-50",   ring: "border-green-100",  color: "text-green-500" },
+          ] as const).map(({ label, category, icon: Icon, bg, ring, color }) => (
+            <Link
               key={label}
+              href={`/viewall/services?category=${category}`}
               className={`flex-shrink-0 flex flex-col items-center gap-2 w-[72px] py-3.5 rounded-2xl border ${bg} ${ring} dark:bg-gray-800 dark:border-gray-700 active:scale-95 transition-transform`}
             >
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center bg-white dark:bg-gray-700 shadow-sm border ${ring} dark:border-gray-600`}>
                 <Icon size={17} className={color} />
               </div>
               <span className="text-[11px] font-semibold text-gray-600 dark:text-gray-300 leading-tight text-center">{label}</span>
-            </button>
+            </Link>
           ))}
         </div>
       </div>

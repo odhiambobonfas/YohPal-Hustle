@@ -15,11 +15,11 @@ const FILTERS = CATEGORY_FILTERS;
 type Filter = CategoryFilter;
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function ViewAllServices() {
+export default function ViewAllServices({ initialFilter = "All" }: { initialFilter?: Filter }) {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [activeFilter, setActiveFilter] = useState<Filter>("All");
+  const [activeFilter, setActiveFilter] = useState<Filter>(initialFilter);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [selectedCatId, setSelectedCatId] = useState<number | null>(null);
   const [showPostJob, setShowPostJob] = useState(false);
