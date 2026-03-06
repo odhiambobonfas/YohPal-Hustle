@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { completeUserRegistration } from "@/services/client/auth";
 import { createUserAndSendVerification } from "@/services/client/email-verification";
-import { sendPhoneVerificationCode, verifyPhoneCode } from "@/services/client/phone-verification";
+import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { getAuth } from "firebase/auth";
 
 export default function RegisterPage() {
@@ -29,7 +29,7 @@ export default function RegisterPage() {
   const [showEmailExistsDialog, setShowEmailExistsDialog] = useState(false);
   const [showPhoneVerification, setShowPhoneVerification] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState<any>(null);
+  const [expectedOtp, setExpectedOtp] = useState<number | null>(null);
   const [phoneVerificationCode, setPhoneVerificationCode] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,17 +70,15 @@ export default function RegisterPage() {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
+    setPhoneVerificationCode(""); // Clear previous OTP input
     try {
       const normalizedPhone = normalizePhoneNumber(formData.phoneNumber);
       setFormData((prev) => ({ ...prev, phoneNumber: normalizedPhone }));
       
-      const phoneResult = await sendPhoneVerificationCode(
-        normalizedPhone,
-        "recaptcha-container"
-      );
+      const phoneResult = await sendPhoneOTP(normalizedPhone);
       
-      if (phoneResult.success && phoneResult.confirmationResult) {
-        setConfirmationResult(phoneResult.confirmationResult);
+      if (phoneResult.success && phoneResult.otp) {
+        setExpectedOtp(phoneResult.otp);
         setShowPhoneVerification(true);
       } else {
         setError(phoneResult.message || "Failed to send phone verification code.");
@@ -103,11 +101,14 @@ export default function RegisterPage() {
         return;
       }
 
+      if (!expectedOtp) {
+        setError("OTP session expired. Please request a new code.");
+        setIsLoading(false);
+        return;
+      }
+
       // Verify phone code
-      const phoneVerifyResult = await verifyPhoneCode(
-        confirmationResult,
-        phoneVerificationCode
-      );
+      const phoneVerifyResult = await verifyPhoneOTP(expectedOtp, phoneVerificationCode);
       
       if (!phoneVerifyResult.success) {
         setError(phoneVerifyResult.message);
@@ -272,6 +273,7 @@ export default function RegisterPage() {
             onClick={() => {
               setShowPhoneVerification(false);
               setPhoneVerificationCode("");
+              setExpectedOtp(null);
             }}
             className="w-full mt-3 bg-white hover:bg-gray-100 text-black font-black py-3 rounded-[10px] border-2 border-[#f44236] transition-all uppercase"
           >
@@ -368,9 +370,6 @@ export default function RegisterPage() {
 
   return (
     <div className="space-y-6">
-      {/* reCAPTCHA container - must be in DOM before verification */}
-      <div id="recaptcha-container"></div>
-      
       <div className="text-center">
         <h2 className="text-2xl font-black text-black uppercase tracking-tight">
           Create Account
