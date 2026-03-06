@@ -1,4 +1,5 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 /**
  * Firebase configuration sourced from environment variables.
@@ -23,5 +24,7 @@ const firebaseConfig = {
  */
 const firebaseApp: FirebaseApp =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+export const auth = getAuth(firebaseApp);
 
 export default firebaseApp;

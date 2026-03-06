@@ -59,7 +59,7 @@ export default function LoginPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+        <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
           Welcome Back
         </h2>
         <p className="text-gray-500 text-sm mt-1 font-medium">
@@ -82,7 +82,7 @@ export default function LoginPage() {
             type="email"
             name="email"
             placeholder="john@example.com"
-            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="w-full bg-white dark:bg-gray-800 border border-[#e57373] dark:border-gray-700 rounded-[10px] px-4 py-3 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
             required
             value={formData.email}
             onChange={handleChange}
@@ -91,7 +91,7 @@ export default function LoginPage() {
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <label className="text-xs font-bold text-black uppercase">
+            <label className="text-xs font-bold text-gray-900 dark:text-gray-200 uppercase">
               Password
             </label>
             <Link
@@ -106,7 +106,7 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="••••••••"
-              className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors pr-12"
+              className="w-full bg-white dark:bg-gray-800 border border-[#e57373] dark:border-gray-700 rounded-[10px] px-4 py-3 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors pr-12"
               required
               value={formData.password}
               onChange={handleChange}
@@ -138,7 +138,7 @@ export default function LoginPage() {
       </form>
 
       <div className="text-center pt-4">
-        <p className="text-sm text-black font-medium">
+        <p className="text-sm text-gray-900 dark:text-gray-300 font-medium">
           Don't have an account?{" "}
           <Link
             href="/register"

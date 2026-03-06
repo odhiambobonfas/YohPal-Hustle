@@ -1,4 +1,4 @@
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import firebaseApp from "./firebase";
 
 const db = getFirestore(firebaseApp);
@@ -10,6 +10,7 @@ export interface UserData {
   email: string;
   phoneNumber: string;
   referralCode?: string;
+  photoURL?: string;
   createdAt: Date;
 }
 
@@ -29,5 +30,17 @@ export async function createUserDocument(userId: string, userData: UserData): Pr
       success: false,
       message: error.message || "Failed to create user profile",
     };
+  }
+}
+
+export async function getUserDocument(userId: string): Promise<{ success: boolean; data: UserData | null; message?: string }> {
+  try {
+    const snapshot = await getDoc(doc(db, "users", userId));
+    if (!snapshot.exists()) {
+      return { success: false, data: null, message: "User not found" };
+    }
+    return { success: true, data: snapshot.data() as UserData };
+  } catch (error: any) {
+    return { success: false, data: null, message: error.message || "Failed to fetch user profile" };
   }
 }

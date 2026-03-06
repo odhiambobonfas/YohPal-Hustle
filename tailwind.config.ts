@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: "media",
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -15,9 +15,9 @@ const config: Config = {
       colors: {
         brand: {
           DEFAULT: "#94041d",
-          dark: "#7a0318",
-          light: "#b5052a",
-          50: "#fff0f2",
+          dark:    "#7a0318",
+          light:   "#b5052a",
+          50:  "#fff0f2",
           100: "#ffd6db",
           200: "#ffadb9",
           300: "#ff7088",
@@ -28,9 +28,22 @@ const config: Config = {
           800: "#44010d",
           900: "#2c0008",
         },
+        // ── Semantic design tokens (follow CSS vars in globals.css) ──
+        page:    "rgb(var(--bg-page)    / <alpha-value>)",
+        surface: {
+          DEFAULT: "rgb(var(--bg-surface)     / <alpha-value>)",
+          alt:     "rgb(var(--bg-surface-alt) / <alpha-value>)",
+        },
+        rim:  "rgb(var(--rim)         / <alpha-value>)",
+        fg: {
+          DEFAULT:   "rgb(var(--fg)           / <alpha-value>)",
+          secondary: "rgb(var(--fg-secondary) / <alpha-value>)",
+          muted:     "rgb(var(--fg-muted)     / <alpha-value>)",
+        },
       },
       backgroundImage: {
-        "brand-gradient": "linear-gradient(135deg, #94041d 0%, #b5052a 50%, #94041d 100%)",
+        "brand-gradient":   "var(--brand-gradient)",
+        "sidebar-gradient": "var(--sidebar-gradient)",
       },
     },
   },

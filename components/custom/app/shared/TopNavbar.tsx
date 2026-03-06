@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Menu, ArrowLeft, MapPin } from "lucide-react";
+import Image from "next/image";
+import { Bell, Menu, ArrowLeft, MapPin, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/providers/ThemeProvider";
 
 interface TopNavbarProps {
   title: string;
@@ -11,6 +13,7 @@ interface TopNavbarProps {
   backHref?: string;
   notificationCount?: number;
   userInitials?: string;
+  userImage?: string | null;
   onMenuClick?: () => void;
 }
 
@@ -22,10 +25,12 @@ export default function TopNavbar({
   backHref = "/dashboard",
   notificationCount = 0,
   userInitials = "YH",
+  userImage,
   onMenuClick,
 }: TopNavbarProps) {
+  const { resolvedTheme, toggleTheme } = useTheme();
   return (
-    <header className="bg-[#94041d] sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-md">
+    <header className="bg-brand sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-md">
       {/* Left — Back or Menu */}
       {showBack ? (
         <Link
@@ -67,25 +72,47 @@ export default function TopNavbar({
         )}
       </div>
 
-      {/* Right — Notifications + Avatar */}
+      {/* Right — Theme toggle + Notifications + Avatar */}
       <div className="flex items-center gap-2">
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+          className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+        >
+          {resolvedTheme === "dark" ? (
+            <Sun size={16} className="text-white/90" />
+          ) : (
+            <Moon size={16} className="text-white/90" />
+          )}
+        </button>
         <Link
           href="/notifications"
           className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
         >
           <Bell size={17} className="text-white" />
           {notificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-yellow-400 text-[#94041d] text-[9px] font-bold min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-yellow-400 text-brand text-[9px] font-bold min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center">
               {notificationCount > 9 ? "9+" : notificationCount}
             </span>
           )}
         </Link>
 
         <Link
-          href="/edit-profile"
-          className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[#94041d] font-bold text-[13px] hover:opacity-90 transition-opacity shadow-sm"
+          href="/profile"
+          className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-brand font-bold text-[13px] hover:opacity-90 transition-opacity shadow-sm overflow-hidden"
         >
-          {userInitials}
+          {userImage ? (
+            <Image
+              src={userImage}
+              alt="Profile"
+              width={36}
+              height={36}
+              className="w-full h-full object-cover"
+              unoptimized
+            />
+          ) : (
+            <span>{userInitials}</span>
+          )}
         </Link>
       </div>
     </header>
