@@ -9,21 +9,24 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-roboto)"],
+      },
       colors: {
         brand: {
           DEFAULT: "#94041d",
-          dark:    "#7a0318",
-          light:   "#b5052a",
-          50:      "#fff0f2",
-          100:     "#ffd6db",
-          200:     "#ffadb9",
-          300:     "#ff7088",
-          400:     "#d4304e",
-          500:     "#94041d",
-          600:     "#7a0318",
-          700:     "#5e0212",
-          800:     "#44010d",
-          900:     "#2c0008",
+          dark: "#7a0318",
+          light: "#b5052a",
+          50: "#fff0f2",
+          100: "#ffd6db",
+          200: "#ffadb9",
+          300: "#ff7088",
+          400: "#d4304e",
+          500: "#94041d",
+          600: "#7a0318",
+          700: "#5e0212",
+          800: "#44010d",
+          900: "#2c0008",
         },
       },
       backgroundImage: {
