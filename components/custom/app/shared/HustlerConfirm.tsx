@@ -161,7 +161,7 @@ const HustlerConfirm: React.FC<HustlerConfirmProps> = ({
           disabled={!canSubmit}
           className={`w-full py-4 rounded-2xl text-sm font-bold transition-all ${
             canSubmit
-              ? "bg-red-500 text-white hover:bg-red-600 active:scale-95 shadow-lg shadow-red-900/40"
+              ? "bg-brand text-white hover:bg-brand-dark active:scale-95 shadow-lg shadow-brand/40"
               : "bg-surface-alt text-fg-muted cursor-not-allowed"
           }`}
         >

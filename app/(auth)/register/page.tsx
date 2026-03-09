@@ -213,13 +213,13 @@ export default function RegisterPage() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+          <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             Account Created!
           </h2>
-          <p className="text-sm text-black mt-4">Your account has been successfully created.</p>
+          <p className="text-sm text-fg-secondary mt-4">Your account has been successfully created.</p>
           <Link
             href="/login"
-            className="inline-block mt-6 bg-[#f44236] hover:bg-black text-white font-black py-3 px-8 rounded-[10px] transition-all uppercase"
+            className="inline-block mt-6 bg-brand hover:bg-brand-dark text-white font-black py-3 px-8 rounded-[10px] transition-all uppercase"
           >
             Go to Login
           </Link>
@@ -232,20 +232,20 @@ export default function RegisterPage() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+          <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             Verify Your Phone Number
           </h2>
-          <p className="text-sm text-black mt-2">
-            We've sent a verification code to <strong>{formData.phoneNumber}</strong>
+          <p className="text-sm text-fg-secondary mt-2">
+            We've sent a verification code to <strong className="text-fg">{formData.phoneNumber}</strong>
           </p>
         </div>
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-            <p className="text-sm text-red-700 font-bold">{error}</p>
+          <div className="bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 p-4 rounded-md">
+            <p className="text-sm text-red-700 dark:text-red-400 font-bold">{error}</p>
           </div>
         )}
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-md">
-          <p className="text-sm text-black font-medium mb-4">
+        <div className="bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 p-6 rounded-md">
+          <p className="text-sm text-fg font-medium mb-4">
             Enter the 6-digit code sent to your phone.
           </p>
           <input
@@ -253,12 +253,12 @@ export default function RegisterPage() {
             value={phoneVerificationCode}
             onChange={(e) => setPhoneVerificationCode(e.target.value)}
             placeholder="000000"
-            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors text-center text-lg tracking-widest font-bold mb-4"
+            className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors text-center text-lg tracking-widest font-bold mb-4"
           />
           <button
             onClick={handleVerifyPhoneAndProceed}
             disabled={isLoading || phoneVerificationCode.length !== 6}
-            className="w-full bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70"
+            className="w-full bg-brand hover:bg-brand-dark text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70"
           >
             {isLoading ? (
               <>
@@ -275,7 +275,7 @@ export default function RegisterPage() {
               setPhoneVerificationCode("");
               setExpectedOtp(null);
             }}
-            className="w-full mt-3 bg-white hover:bg-gray-100 text-black font-black py-3 rounded-[10px] border-2 border-[#f44236] transition-all uppercase"
+            className="w-full mt-3 bg-surface hover:bg-surface-alt text-fg font-black py-3 rounded-[10px] border-2 border-brand transition-all uppercase"
           >
             Go Back
           </button>
@@ -288,26 +288,26 @@ export default function RegisterPage() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+          <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             Verify Your Email
           </h2>
-          <p className="text-sm text-black mt-2">
-            Almost done! Now verify your email: <strong>{formData.email}</strong>
+          <p className="text-sm text-fg-secondary mt-2">
+            Almost done! Now verify your email: <strong className="text-fg">{formData.email}</strong>
           </p>
         </div>
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-            <p className="text-sm text-red-700 font-bold">{error}</p>
+          <div className="bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 p-4 rounded-md">
+            <p className="text-sm text-red-700 dark:text-red-400 font-bold">{error}</p>
           </div>
         )}
-        <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-md">
-          <p className="text-sm text-black font-medium mb-4">
+        <div className="bg-green-50 dark:bg-green-950/50 border-l-4 border-green-500 p-6 rounded-md">
+          <p className="text-sm text-fg font-medium mb-4">
             ✓ Phone verified successfully!
           </p>
           <button
             onClick={handleVerifyEmailAndRegister}
             disabled={isLoading}
-            className="w-full bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70 mb-4"
+            className="w-full bg-brand hover:bg-brand-dark text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70 mb-4"
           >
             {isLoading ? (
               <>
@@ -341,24 +341,24 @@ export default function RegisterPage() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+          <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             Email Already Exists
           </h2>
         </div>
-        <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-md">
-          <p className="text-sm text-black font-medium mb-4">
+        <div className="bg-yellow-50 dark:bg-yellow-950/50 border-l-4 border-yellow-500 p-6 rounded-md">
+          <p className="text-sm text-fg font-medium mb-4">
             This email is already registered. Would you like to login instead?
           </p>
           <div className="flex gap-4">
             <button
               onClick={handleLoginRedirect}
-              className="flex-1 bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] transition-all uppercase"
+              className="flex-1 bg-brand hover:bg-brand-dark text-white font-black py-3 rounded-[10px] transition-all uppercase"
             >
               Yes, Login
             </button>
             <button
               onClick={handleUseAnotherEmail}
-              className="flex-1 bg-white hover:bg-gray-100 text-black font-black py-3 rounded-[10px] border-2 border-[#f44236] transition-all uppercase"
+              className="flex-1 bg-surface hover:bg-surface-alt text-fg font-black py-3 rounded-[10px] border-2 border-brand transition-all uppercase"
             >
               Use Another Email
             </button>
@@ -371,36 +371,36 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+        <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
           Create Account
         </h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-            <p className="text-sm text-red-700 font-bold">{error}</p>
+          <div className="bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 p-4 rounded-md">
+            <p className="text-sm text-red-700 dark:text-red-400 font-bold">{error}</p>
           </div>
         )}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-black">First name</label>
+            <label className="text-xs font-bold text-fg">First name</label>
             <input
               type="text"
               name="firstName"
               placeholder="John"
-              className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+              className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
               required
               onChange={handleChange}
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-bold text-black">Last name</label>
+            <label className="text-xs font-bold text-fg">Last name</label>
             <input
               type="text"
               name="lastName"
               placeholder="Doe"
-              className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+              className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
               required
               onChange={handleChange}
             />
@@ -408,36 +408,36 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-bold text-black">Username</label>
+          <label className="text-xs font-bold text-fg">Username</label>
           <input
             type="text"
             name="username"
             placeholder="johndoe_123"
-            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             required
             onChange={handleChange}
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-bold text-black">Email address</label>
+          <label className="text-xs font-bold text-fg">Email address</label>
           <input
             type="email"
             name="email"
             placeholder="john@example.com"
-            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             required
             onChange={handleChange}
           />
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-bold text-black">Phone number</label>
+          <label className="text-xs font-bold text-fg">Phone number</label>
           <input
             type="tel"
             name="phoneNumber"
             placeholder="+1234567890"
-            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             required
             onChange={handleChange}
           />
@@ -445,27 +445,27 @@ export default function RegisterPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-black">Password</label>
+            <label className="text-xs font-bold text-fg">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="••••••••"
-                className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors pr-12"
+                className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors pr-12"
                 required
                 onChange={handleChange}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#f44236] transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-fg-muted hover:text-brand transition-colors"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-bold text-black">
+            <label className="text-xs font-bold text-fg">
               Confirm password
             </label>
             <div className="relative">
@@ -473,14 +473,14 @@ export default function RegisterPage() {
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="••••••••"
-                className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors pr-12"
+                className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors pr-12"
                 required
                 onChange={handleChange}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#f44236] transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-fg-muted hover:text-brand transition-colors"
               >
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -489,14 +489,14 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-bold text-black">
+          <label className="text-xs font-bold text-fg">
             Referral code (Optional)
           </label>
           <input
             type="text"
             name="referralCode"
             placeholder="HUSTLE2026"
-            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             onChange={handleChange}
           />
         </div>
@@ -507,7 +507,7 @@ export default function RegisterPage() {
               type="checkbox"
               name="agreeToTerms"
               id="agreeToTerms"
-              className="w-5 h-5 appearance-none bg-white border border-[#e57373] rounded-[10px] focus:ring-0 checked:bg-[#f44236] checked:border-black transition-all cursor-pointer"
+              className="w-5 h-5 appearance-none bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] focus:ring-0 checked:bg-brand checked:border-brand-dark transition-all cursor-pointer"
               required
               onChange={handleChange}
             />
@@ -528,12 +528,12 @@ export default function RegisterPage() {
           </div>
           <label
             htmlFor="agreeToTerms"
-            className="text-sm text-black font-medium cursor-pointer"
+            className="text-sm text-fg font-medium cursor-pointer"
           >
             I agree to the{" "}
             <Link
               href="/terms"
-              className="text-[#f44236] font-bold hover:underline underline-offset-2"
+              className="text-brand font-bold hover:underline underline-offset-2"
             >
               terms and conditions
             </Link>
@@ -543,7 +543,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-[#f44236] hover:bg-black text-white font-black py-4 rounded-[10px] border border-[#f44236] active:translate-x-[1px] active:translate-y-[1px] transition-all duration-100 uppercase mt-6 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full bg-brand hover:bg-brand-dark text-white font-black py-4 rounded-[10px] border border-brand active:translate-x-[1px] active:translate-y-[1px] transition-all duration-100 uppercase mt-6 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>
@@ -557,11 +557,11 @@ export default function RegisterPage() {
       </form>
 
       <div className="text-center pt-4">
-        <p className="text-sm text-black font-medium">
+        <p className="text-sm text-fg-secondary font-medium">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-[#f44236] font-black hover:underline underline-offset-4"
+            className="text-brand font-black hover:underline underline-offset-4"
           >
             LOGIN
           </Link>

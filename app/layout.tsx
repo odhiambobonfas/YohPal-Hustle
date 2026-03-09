@@ -37,7 +37,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-[#f5f5f7] dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+      <body className="font-sans antialiased bg-page text-fg">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

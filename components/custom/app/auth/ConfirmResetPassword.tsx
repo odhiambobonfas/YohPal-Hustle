@@ -68,20 +68,20 @@ export default function ConfirmResetPassword() {
   };
 
   return (
-    <div className="max-w-md w-full">
-      <h2 className="text-lg font-semibold mb-4">Set a new password</h2>
+    <div className="max-w-md w-full bg-surface border border-rim rounded-[10px] p-8">
+      <h2 className="text-lg font-semibold mb-4 text-fg">Set a new password</h2>
 
       {email && (
-        <p className="text-sm mb-3">
-          Resetting password for <strong>{email}</strong>
+        <p className="text-sm mb-3 text-fg-secondary">
+          Resetting password for <strong className="text-fg">{email}</strong>
         </p>
       )}
-      {error && <p className="text-red-600 mb-3">{error}</p>}
-      {message && <p className="text-green-600 mb-3">{message}</p>}
+      {error && <p className="text-red-600 dark:text-red-400 mb-3">{error}</p>}
+      {message && <p className="text-green-600 dark:text-green-400 mb-3">{message}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <label className="block">
-          <span className="text-sm font-bold text-black uppercase">
+          <span className="text-sm font-bold text-fg uppercase">
             New password
           </span>
           <input
@@ -89,12 +89,12 @@ export default function ConfirmResetPassword() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
-            className="mt-1 block w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="mt-1 block w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
           />
         </label>
 
         <label className="block">
-          <span className="text-sm font-bold text-black uppercase">
+          <span className="text-sm font-bold text-fg uppercase">
             Confirm password
           </span>
           <input
@@ -102,7 +102,7 @@ export default function ConfirmResetPassword() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            className="mt-1 block w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="mt-1 block w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
           />
         </label>
 
@@ -110,7 +110,7 @@ export default function ConfirmResetPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] border border-[#f44236] transition-all duration-100 uppercase disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-brand hover:bg-brand-dark text-white font-black py-3 rounded-[10px] border border-brand transition-all duration-100 uppercase disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? "Updating…" : "Set new password"}
           </button>
