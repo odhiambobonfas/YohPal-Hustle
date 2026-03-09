@@ -2,14 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light theme tokens ──────────────────────────────────────────── */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --foreground-rgb: 30, 41, 59;
   --background-rgb: 245, 245, 247;
+  --card-border: #e5e7eb;
+
+  /* Page & surface backgrounds (space-separated for Tailwind alpha) */
+  --bg-page:        245 245 247;   /* #f5f5f7  */
+  --bg-surface:     255 255 255;   /* white    */
+  --bg-surface-alt: 243 244 246;   /* gray-100 */
+
+  /* Borders */
+  --rim:            229 231 235;   /* gray-200 */
+
+  /* Foreground text */
+  --fg:             17 24 39;      /* gray-900 */
+  --fg-secondary:   75 85 99;      /* gray-600 */
+  --fg-muted:       156 163 175;   /* gray-400 */
+
+  /* Brand sidebar gradient */
+  --sidebar-gradient: linear-gradient(160deg, #6a0015 0%, #94041d 55%, #b5052a 100%);
+  --brand-gradient:   linear-gradient(135deg, #94041d 0%, #b5052a 50%, #94041d 100%);
 }
 
-html {
-  color-scheme: light;
+/* ── Dark theme tokens ───────────────────────────────────────────── */
+.dark {
+  color-scheme: dark;
+  --foreground-rgb: 241, 245, 249;
+  --background-rgb: 10, 10, 20;
+  --card-border: #27272a;
+
+  --bg-page:        10 10 20;      /* #0a0a14  – matches sidebar dark */
+  --bg-surface:     24 24 27;      /* zinc-900 */
+  --bg-surface-alt: 39 39 42;      /* zinc-800 */
+
+  --rim:            39 39 42;      /* zinc-800 */
+
+  --fg:             241 245 249;   /* slate-100 */
+  --fg-secondary:   161 161 170;   /* zinc-400  */
+  --fg-muted:       113 113 122;   /* zinc-500  */
 }
 
 body {
@@ -17,6 +50,7 @@ body {
   background-color: rgb(var(--background-rgb));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Hide scrollbar but keep functionality */
@@ -26,4 +60,15 @@ body {
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* GPU-composite the sidebar slide — no layout recalc on open/close */
+aside {
+  will-change: transform;
+}
+
+/* Defer rendering of off-screen page content */
+.content-lazy {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 200px;
 }

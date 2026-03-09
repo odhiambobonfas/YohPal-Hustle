@@ -38,7 +38,7 @@ The YohPal Hustle application aims to:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Yohpal-International-Limited/YohPal-Hustle.git
+   git clone https://github.com/Yohpal-International-Limited/YohPal-Hustle
    cd YohPal-Hustle
    ```
 
@@ -111,7 +111,7 @@ YohPal-Hustle/
 └── tsconfig.json       # TypeScript configuration
 ```
 
-## 🛠️ Development Guide
+##  Development Guide
 
 ### Tech Stack
 
@@ -193,8 +193,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support & Resources
 
 - **Documentation**: [Coming Soon]
-- **Issues**: [GitHub Issues](https://github.com/Yohpal-International-Limited/YohPal-Hustle/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Yohpal-International-Limited/YohPal-Hustle/discussions)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/YohPal-Hustle/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/YohPal-Hustle/discussions)
 - **Email**: support@yohpal.com
 
 ## 🙏 Acknowledgments
@@ -206,6 +206,3 @@ Built with modern web technologies:
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Lucide Icons](https://lucide.dev/)
 
----
-
-**Ready to start hustling?** 🚀 Get started by following the Quick Start guide above!

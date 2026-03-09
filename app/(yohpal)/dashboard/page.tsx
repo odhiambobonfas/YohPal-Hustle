@@ -109,19 +109,19 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="px-4 pt-4 pb-6 space-y-5 max-w-lg mx-auto lg:max-w-3xl">
+    <div className="px-4 pt-4 pb-24 lg:px-6 space-y-5">
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <div
-        className="rounded-3xl p-5 text-white relative overflow-hidden"
+        className="rounded-2xl p-4 text-white relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
       >
-        <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/5" />
-        <div className="absolute -bottom-12 -left-8 w-52 h-52 rounded-full bg-white/5" />
+        <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-white/5" />
+        <div className="absolute -bottom-8 -left-6 w-40 h-40 rounded-full bg-white/5" />
 
         <div className="relative z-10">
           {/* Top row */}
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-white/65 text-[12px] font-medium">Welcome back 👋</p>
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -264,33 +264,34 @@ export default function Dashboard() {
       {/* ── Services ─────────────────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[15px] font-bold text-gray-800 dark:text-white">Services</h3>
+          <h3 className="text-[15px] font-bold text-fg">Services</h3>
           <Link
             href="/viewall/services"
-            className="flex items-center text-[12px] text-[#94041d] font-semibold gap-0.5 hover:opacity-75 transition-opacity"
+            className="flex items-center text-[12px] text-brand font-semibold gap-0.5 hover:opacity-75 transition-opacity"
           >
             View All <ChevronRight size={13} />
           </Link>
         </div>
 
-        <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1 -mx-4 px-4">
+        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
           {([
-            { label: "Food",         icon: UtensilsCrossed, bg: "bg-orange-50",  ring: "border-orange-100", color: "text-orange-500" },
-            { label: "Trades",       icon: Wrench,          bg: "bg-blue-50",    ring: "border-blue-100",   color: "text-blue-500" },
-            { label: "Events",       icon: CalendarDays,    bg: "bg-purple-50",  ring: "border-purple-100", color: "text-purple-500" },
-            { label: "Retail",       icon: ShoppingBag,     bg: "bg-pink-50",    ring: "border-pink-100",   color: "text-pink-500" },
-            { label: "Transport",    icon: Truck,           bg: "bg-teal-50",    ring: "border-teal-100",   color: "text-teal-500" },
-            { label: "Environment",  icon: Leaf,            bg: "bg-green-50",   ring: "border-green-100",  color: "text-green-500" },
-          ] as const).map(({ label, icon: Icon, bg, ring, color }) => (
-            <button
+            { label: "Food",         category: "Food",        icon: UtensilsCrossed, bg: "bg-orange-50",  ring: "border-orange-100", color: "text-orange-500" },
+            { label: "Trades",       category: "Trades",      icon: Wrench,          bg: "bg-blue-50",    ring: "border-blue-100",   color: "text-blue-500" },
+            { label: "Events",       category: "Events",      icon: CalendarDays,    bg: "bg-purple-50",  ring: "border-purple-100", color: "text-purple-500" },
+            { label: "Retail",       category: "Retail",      icon: ShoppingBag,     bg: "bg-pink-50",    ring: "border-pink-100",   color: "text-pink-500" },
+            { label: "Transport",    category: "Transport",   icon: Truck,           bg: "bg-teal-50",    ring: "border-teal-100",   color: "text-teal-500" },
+            { label: "Environment",  category: "Environment", icon: Leaf,            bg: "bg-green-50",   ring: "border-green-100",  color: "text-green-500" },
+          ] as const).map(({ label, category, icon: Icon, bg, ring, color }) => (
+            <Link
               key={label}
-              className={`flex-shrink-0 flex flex-col items-center gap-2 w-[72px] py-3.5 rounded-2xl border ${bg} ${ring} dark:bg-gray-800 dark:border-gray-700 active:scale-95 transition-transform`}
+              href={`/viewall/services?category=${category}`}
+              className={`flex flex-col items-center gap-2 py-3.5 rounded-2xl border ${bg} ${ring} dark:bg-surface dark:border-rim active:scale-95 transition-transform`}
             >
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center bg-white dark:bg-gray-700 shadow-sm border ${ring} dark:border-gray-600`}>
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center bg-white dark:bg-surface-alt shadow-sm border ${ring} dark:border-rim`}>
                 <Icon size={17} className={color} />
               </div>
-              <span className="text-[11px] font-semibold text-gray-600 dark:text-gray-300 leading-tight text-center">{label}</span>
-            </button>
+              <span className="text-[11px] font-semibold text-fg-secondary leading-tight text-center">{label}</span>
+            </Link>
           ))}
         </div>
       </div>
@@ -298,8 +299,8 @@ export default function Dashboard() {
       {/* ── Recent Activities ────────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[15px] font-bold text-gray-800 dark:text-white">Recent Activities</h3>
-          <button className="flex items-center text-[12px] text-[#94041d] font-semibold gap-0.5 hover:opacity-75 transition-opacity">
+          <h3 className="text-[15px] font-bold text-fg">Recent Activities</h3>
+          <button className="flex items-center text-[12px] text-brand font-semibold gap-0.5 hover:opacity-75 transition-opacity">
             View All <ChevronRight size={13} />
           </button>
         </div>
@@ -307,19 +308,19 @@ export default function Dashboard() {
         <div className="space-y-2">
           {jobsLoading ? (
             Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl p-3.5 border border-gray-100 dark:border-gray-700 animate-pulse flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-700 flex-shrink-0" />
+              <div key={i} className="bg-surface rounded-2xl p-3.5 border border-rim animate-pulse flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-surface-alt flex-shrink-0" />
                 <div className="flex-1 space-y-1.5">
-                  <div className="h-3.5 bg-gray-100 dark:bg-gray-700 rounded-lg w-2/3" />
-                  <div className="h-3 bg-gray-100 dark:bg-gray-700 rounded-lg w-1/3" />
+                  <div className="h-3.5 bg-surface-alt rounded-lg w-2/3" />
+                  <div className="h-3 bg-surface-alt rounded-lg w-1/3" />
                 </div>
-                <div className="h-3 bg-gray-100 dark:bg-gray-700 rounded-lg w-10" />
+                <div className="h-3 bg-surface-alt rounded-lg w-10" />
               </div>
             ))
           ) : jobs.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center border border-gray-100 dark:border-gray-700">
-              <Activity size={28} className="text-gray-200 dark:text-gray-600 mx-auto mb-2" />
-              <p className="text-sm text-gray-400 dark:text-gray-500">No recent activity yet</p>
+            <div className="bg-surface rounded-2xl p-6 text-center border border-rim">
+              <Activity size={28} className="text-fg-muted/40 mx-auto mb-2" />
+              <p className="text-sm text-fg-muted">No recent activity yet</p>
             </div>
           ) : (
             [...jobs]
@@ -336,24 +337,24 @@ export default function Dashboard() {
                                : isRejected  ? <XCircle    size={15} className="text-gray-400" />
                                : isAccepted  ? <Activity   size={15} className="text-blue-500" />
                                :               <Clock      size={15} className="text-yellow-500" />;
-                const badgeStyle = isCompleted ? "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-                                 : isAccepted  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                                 : isPending   ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400"
-                                 :               "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500";
+                const badgeStyle = isCompleted ? "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400"
+                                 : isAccepted  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                                 : isPending   ? "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400"
+                                 :               "bg-surface-alt text-fg-muted";
 
                 return (
-                  <div key={job.jobId} className="bg-white dark:bg-gray-800 rounded-2xl p-3.5 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center gap-3">
+                  <div key={job.jobId} className="bg-surface rounded-2xl p-3.5 border border-rim shadow-sm flex items-center gap-3">
                     {/* Icon */}
-                    <div className="w-9 h-9 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-xl bg-surface-alt border border-rim flex items-center justify-center flex-shrink-0">
                       {iconEl}
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-semibold text-gray-800 dark:text-white truncate">{job.jobName}</p>
+                      <p className="text-[13px] font-semibold text-fg truncate">{job.jobName}</p>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <div className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
-                        <p className="text-[11px] text-gray-400 dark:text-gray-500">{job.clientName}</p>
+                        <p className="text-[11px] text-fg-muted">{job.clientName}</p>
                       </div>
                     </div>
 
@@ -362,7 +363,7 @@ export default function Dashboard() {
                       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize ${badgeStyle}`}>
                         {job.status}
                       </span>
-                      <span className="text-[10px] text-gray-400 dark:text-gray-500">
+                      <span className="text-[10px] text-fg-muted">
                         {new Date(job.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
                       </span>
                     </div>
