@@ -85,7 +85,7 @@ const HustlerProfile: React.FC<HustlerProfileProps> = ({
 
         {/* Avatar initials */}
         <div className="flex flex-col items-center pt-6 pb-2">
-          <div className="w-20 h-20 rounded-full border-4 border-brand/40 shadow-lg bg-white flex items-center justify-center text-brand font-black text-2xl">
+          <div className="w-20 h-20 rounded-full border-4 border-brand/40 shadow-lg bg-surface flex items-center justify-center text-brand font-black text-2xl">
             {initials}
           </div>
 
@@ -160,7 +160,7 @@ const HustlerProfile: React.FC<HustlerProfileProps> = ({
             <button
               onClick={handleToggle}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                hustlerMode ? "bg-red-500" : "bg-gray-300 dark:bg-zinc-600"
+                hustlerMode ? "bg-brand" : "bg-gray-300 dark:bg-zinc-600"
               }`}
             >
               <span

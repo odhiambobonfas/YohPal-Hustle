@@ -61,7 +61,7 @@ const HustlerWelcome: React.FC<HustlerWelcomeProps> = ({ onCompleteVerification 
       <div className="w-full max-w-xs mt-8">
         <button
           onClick={onCompleteVerification}
-          className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 active:scale-95 transition-all text-white font-semibold text-base py-4 rounded-full shadow-lg shadow-red-900/40"
+          className="w-full flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark active:scale-95 transition-all text-white font-semibold text-base py-4 rounded-full shadow-lg shadow-brand/40"
         >
           Complete Verification
           <ArrowRight size={18} />

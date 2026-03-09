@@ -61,7 +61,13 @@ export default function Dashboard() {
     try {
       setJobsLoading(true);
       const data = await getJobRequests(MOCK_HUSTLER_ID, MOCK_TOKEN);
-      setJobs(data);
+      // Ensure data is an array (API might return { data: [...] } or similar)
+      const jobsArray = Array.isArray(data) 
+        ? data 
+        : Array.isArray((data as { data?: JobRequest[] })?.data) 
+          ? (data as { data: JobRequest[] }).data 
+          : [];
+      setJobs(jobsArray);
     } catch {
       setJobs([]);
     } finally {
@@ -113,8 +119,7 @@ export default function Dashboard() {
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <div
-        className="rounded-2xl p-4 text-white relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
+        className="rounded-2xl p-4 text-white relative overflow-hidden bg-brand-gradient"
       >
         <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-white/5" />
         <div className="absolute -bottom-8 -left-6 w-40 h-40 rounded-full bg-white/5" />

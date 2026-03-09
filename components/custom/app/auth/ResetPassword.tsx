@@ -24,11 +24,11 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="max-w-md w-full">
-      <h2 className="text-lg font-semibold mb-4">Reset your password</h2>
+    <div className="max-w-md w-full bg-surface border border-rim rounded-[10px] p-8">
+      <h2 className="text-lg font-semibold mb-4 text-fg">Reset your password</h2>
       <form onSubmit={handleSubmit} className="space-y-3">
         <label className="block">
-          <span className="text-sm font-bold text-black uppercase">
+          <span className="text-sm font-bold text-fg uppercase">
             Email address
           </span>
           <input
@@ -36,7 +36,7 @@ export default function ResetPassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="mt-1 block w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="mt-1 block w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             placeholder="you@example.com"
           />
         </label>
@@ -45,15 +45,15 @@ export default function ResetPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] border border-[#f44236] transition-all duration-100 uppercase disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-brand hover:bg-brand-dark text-white font-black py-3 rounded-[10px] border border-brand transition-all duration-100 uppercase disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? "Sending…" : "Send reset email"}
           </button>
         </div>
       </form>
 
-      {message && <p className="mt-3 text-green-600">{message}</p>}
-      {error && <p className="mt-3 text-red-600">{error}</p>}
+      {message && <p className="mt-3 text-green-600 dark:text-green-400">{message}</p>}
+      {error && <p className="mt-3 text-red-600 dark:text-red-400">{error}</p>}
     </div>
   );
 }

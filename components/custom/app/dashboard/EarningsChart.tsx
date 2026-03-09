@@ -69,11 +69,12 @@ export default function EarningsChart() {
           return (
             <div key={item.label} className="flex-1 flex flex-col items-center gap-1">
               <div
-                className="w-full rounded-t-lg transition-all duration-500"
+                className={`w-full rounded-t-lg transition-all duration-500 ${
+                  isMax ? "bg-brand" : "bg-brand/20"
+                }`}
                 style={{
                   height: `${heightPct}%`,
                   minHeight: "4px",
-                  background: isMax ? "#94041d" : "rgba(148,4,29,0.18)",
                 }}
               />
               <span className="text-[9px] text-fg-muted font-medium">{item.label}</span>
