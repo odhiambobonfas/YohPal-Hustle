@@ -85,8 +85,7 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
         </div>
         <button
           onClick={onBack}
-          className="mt-2 px-8 py-3.5 rounded-xl text-white text-[14px] font-bold transition-all shadow-lg shadow-brand/25 active:scale-95"
-          style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 55%, #b5052a 100%)" }}
+          className="mt-2 px-8 py-3.5 rounded-xl text-white text-[14px] font-bold transition-all shadow-lg shadow-brand/25 active:scale-95 bg-brand-gradient"
         >
           ← Back to Categories
         </button>
@@ -100,8 +99,7 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
       {/* Header */}
       <div className="sticky top-0 z-20">
         <div
-          className="px-4 pt-6 pb-5"
-          style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
+          className="px-4 pt-6 pb-5 bg-brand-gradient"
         >
           <div className="flex items-center gap-3 max-w-2xl mx-auto">
             <button
@@ -295,8 +293,7 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full py-4 rounded-xl text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand/25"
-            style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 55%, #b5052a 100%)" }}
+            className="w-full py-4 rounded-xl text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand/25 bg-brand-gradient"
           >
             {loading ? (
               <>

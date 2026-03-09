@@ -99,7 +99,7 @@ export default function TopNavbar({
 
         <Link
           href="/profile"
-          className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-brand font-bold text-[13px] hover:opacity-90 transition-opacity shadow-sm overflow-hidden"
+          className="w-9 h-9 rounded-full bg-surface flex items-center justify-center text-brand font-bold text-[13px] hover:opacity-90 transition-opacity shadow-sm overflow-hidden"
         >
           {userImage ? (
             <Image

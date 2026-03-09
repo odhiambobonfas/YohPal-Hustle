@@ -61,8 +61,7 @@ export default function Sidebar({ isOpen = false, onClose, userInitials = "YH", 
       >
         {/* ── CRIMSON HEADER ─────────────────────────────────── */}
         <div
-          className="relative px-5 pt-5 pb-4 overflow-hidden flex-shrink-0"
-          style={{ background: "linear-gradient(160deg, #6a0015 0%, #94041d 55%, #b5052a 100%)" }}
+          className="relative px-5 pt-5 pb-4 overflow-hidden flex-shrink-0 bg-sidebar-gradient"
         >
           {/* Decorative circles */}
           <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
@@ -77,7 +76,7 @@ export default function Sidebar({ isOpen = false, onClose, userInitials = "YH", 
           </button>
 
           {/* Avatar */}
-          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand font-black text-[14px] shadow-lg mb-3 overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-brand font-black text-[14px] shadow-lg mb-3 overflow-hidden">
             {userImage ? (
               <Image
                 src={userImage}

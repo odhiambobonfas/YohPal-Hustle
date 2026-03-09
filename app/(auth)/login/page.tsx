@@ -70,30 +70,30 @@ export default function LoginPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
+        <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
           Welcome Back
         </h2>
-        <p className="text-gray-500 text-sm mt-1 font-medium">
+        <p className="text-fg-secondary text-sm mt-1 font-medium">
           Enter your credentials to access your account
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-            <p className="text-sm text-red-700 font-bold">{error}</p>
+          <div className="bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 p-4 rounded-md">
+            <p className="text-sm text-red-700 dark:text-red-400 font-bold">{error}</p>
           </div>
         )}
 
         <div className="space-y-1">
-          <label className="text-xs font-bold text-black uppercase">
+          <label className="text-xs font-bold text-fg uppercase">
             Email address
           </label>
           <input
             type="email"
             name="email"
             placeholder="john@example.com"
-            className="w-full bg-white dark:bg-gray-800 border border-[#e57373] dark:border-gray-700 rounded-[10px] px-4 py-3 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors"
+            className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             required
             value={formData.email}
             onChange={handleChange}
@@ -102,7 +102,7 @@ export default function LoginPage() {
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <label className="text-xs font-bold text-gray-900 dark:text-gray-200 uppercase">
+            <label className="text-xs font-bold text-fg uppercase">
               Password
             </label>
           </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="••••••••"
-              className="w-full bg-white dark:bg-gray-800 border border-[#e57373] dark:border-gray-700 rounded-[10px] px-4 py-3 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors pr-12"
+              className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors pr-12"
               required
               value={formData.password}
               onChange={handleChange}
@@ -119,7 +119,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#f44236] transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-fg-muted hover:text-brand transition-colors"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -129,7 +129,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-[#f44236] hover:bg-black text-white font-black py-4 rounded-[10px] border border-[#f44236] active:translate-x-[1px] active:translate-y-[1px] transition-all duration-100 uppercase mt-6 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full bg-brand hover:bg-brand-dark text-white font-black py-4 rounded-[10px] border border-brand active:translate-x-[1px] active:translate-y-[1px] transition-all duration-100 uppercase mt-6 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>
@@ -142,18 +142,18 @@ export default function LoginPage() {
         </button>
         <Link
           href="/forgot-password"
-          className="text-xs font-bold text-[#f44236] hover:underline underline-offset-2"
+          className="text-xs font-bold text-brand hover:underline underline-offset-2"
         >
           Forgot password?
         </Link>
       </form>
 
       <div className="text-center pt-4">
-        <p className="text-sm text-gray-900 dark:text-gray-300 font-medium">
+        <p className="text-sm text-fg-secondary font-medium">
           Don't have an account?{" "}
           <Link
             href="/register"
-            className="text-[#f44236] font-black hover:underline underline-offset-4"
+            className="text-brand font-black hover:underline underline-offset-4"
           >
             REGISTER
           </Link>

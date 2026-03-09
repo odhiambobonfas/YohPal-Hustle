@@ -10,13 +10,13 @@ interface SkillConfig {
 }
 
 const skillIcons: Record<string, SkillConfig> = {
-  Plumbing:    { icon: Wrench,      color: "text-blue-600",   bg: "bg-blue-50" },
-  Electrical:  { icon: Zap,         color: "text-yellow-600", bg: "bg-yellow-50" },
-  Cleaning:    { icon: Sparkles,    color: "text-green-600",  bg: "bg-green-50" },
-  Carpentry:   { icon: Hammer,      color: "text-amber-700",  bg: "bg-amber-50" },
-  Painting:    { icon: Paintbrush,  color: "text-pink-600",   bg: "bg-pink-50" },
-  Security:    { icon: ShieldCheck, color: "text-slate-600",  bg: "bg-slate-100" },
-  Default:     { icon: Wrench,      color: "text-orange-600", bg: "bg-orange-50" },
+  Plumbing:    { icon: Wrench,      color: "text-blue-600 dark:text-blue-400",   bg: "bg-blue-50 dark:bg-blue-950/50" },
+  Electrical:  { icon: Zap,         color: "text-yellow-600 dark:text-yellow-400", bg: "bg-yellow-50 dark:bg-yellow-950/50" },
+  Cleaning:    { icon: Sparkles,    color: "text-green-600 dark:text-green-400",  bg: "bg-green-50 dark:bg-green-950/50" },
+  Carpentry:   { icon: Hammer,      color: "text-amber-700 dark:text-amber-400",  bg: "bg-amber-50 dark:bg-amber-950/50" },
+  Painting:    { icon: Paintbrush,  color: "text-pink-600 dark:text-pink-400",   bg: "bg-pink-50 dark:bg-pink-950/50" },
+  Security:    { icon: ShieldCheck, color: "text-slate-600 dark:text-slate-400", bg: "bg-slate-100 dark:bg-slate-800/50" },
+  Default:     { icon: Wrench,      color: "text-orange-600 dark:text-orange-400", bg: "bg-orange-50 dark:bg-orange-950/50" },
 };
 
 interface JobRequestCardProps {
@@ -106,7 +106,7 @@ export default function JobRequestCard({
 
       {status === "accepted" && (
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-rim">
-          <span className="text-[12px] bg-green-50 text-green-600 px-3 py-1 rounded-full font-semibold">
+          <span className="text-[12px] bg-green-50 dark:bg-green-950/50 text-green-600 dark:text-green-400 px-3 py-1 rounded-full font-semibold">
             ✓ Accepted
           </span>
           <button className="flex items-center text-[12px] text-brand font-semibold gap-0.5 hover:opacity-75 transition-opacity">
@@ -117,7 +117,7 @@ export default function JobRequestCard({
 
       {status === "rejected" && (
         <div className="flex items-center mt-3 pt-3 border-t border-rim">
-          <span className="text-[12px] bg-red-50 text-red-500 px-3 py-1 rounded-full font-semibold">
+          <span className="text-[12px] bg-red-50 dark:bg-red-950/50 text-red-500 dark:text-red-400 px-3 py-1 rounded-full font-semibold">
             ✕ Declined
           </span>
         </div>
@@ -125,7 +125,7 @@ export default function JobRequestCard({
 
       {status === "completed" && (
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-rim">
-          <span className="text-[12px] bg-blue-50 text-blue-600 px-3 py-1 rounded-full font-semibold">
+          <span className="text-[12px] bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full font-semibold">
             ✓ Completed
           </span>
           <button className="flex items-center text-[12px] text-brand font-semibold gap-0.5 hover:opacity-75 transition-opacity">

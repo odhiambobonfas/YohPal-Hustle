@@ -58,8 +58,7 @@ export default function ViewAllServices({ initialFilter = "All" }: { initialFilt
 
         {/* Brand title bar */}
         <div
-          className="px-4 pt-5 pb-4"
-          style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
+          className="px-4 pt-5 pb-4 bg-brand-gradient"
         >
           <div className="flex items-center gap-3 max-w-5xl mx-auto">
             <button

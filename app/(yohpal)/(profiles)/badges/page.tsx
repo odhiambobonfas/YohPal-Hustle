@@ -40,13 +40,13 @@ export default function BadgesPage() {
             className="bg-surface rounded-2xl p-4 flex flex-col items-center gap-2 border border-rim"
           >
             <div
-              className="w-14 h-14 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: badge.earned ? badge.color + "22" : "#27272a" }}
+              className={`w-14 h-14 rounded-full flex items-center justify-center ${badge.earned ? "" : "bg-surface-alt"}`}
+              style={badge.earned ? { backgroundColor: badge.color + "22" } : undefined}
             >
               {badge.earned ? (
                 <Award size={28} style={{ color: badge.color }} />
               ) : (
-                <Lock size={22} className="text-gray-400 dark:text-zinc-600" />
+                <Lock size={22} className="text-fg-muted" />
               )}
             </div>
             <p className="text-[13px] font-semibold text-center text-fg">{badge.label}</p>
