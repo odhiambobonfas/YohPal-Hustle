@@ -3,9 +3,9 @@ import firebaseApp from "@/services/server/firebase";
 
 const auth = getAuth(firebaseApp);
 
-export async function sendVerificationEmail(email: string, password: string): Promise<{ success: boolean; message: string; tempUser?: any }> {
+export async function createUserAndSendVerification(email: string, password: string): Promise<{ success: boolean; message: string; tempUser?: any }> {
   try {
-    // Create temporary user to send verification email
+    // Create user in Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     
     // Send verification email
@@ -18,7 +18,7 @@ export async function sendVerificationEmail(email: string, password: string): Pr
     };
   } catch (error: any) {
     if (error.code === "auth/email-already-in-use") {
-      throw error; // Re-throw to handle in component
+      throw error;
     }
     return {
       success: false,

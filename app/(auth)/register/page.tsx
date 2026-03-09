@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { completeUserRegistration } from "@/services/client/auth";
-import { sendVerificationEmail, checkEmailVerified } from "@/services/client/email-verification";
+import { createUserAndSendVerification } from "@/services/client/email-verification";
+import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
+import { getAuth } from "firebase/auth";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -25,8 +27,10 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEmailExistsDialog, setShowEmailExistsDialog] = useState(false);
+  const [showPhoneVerification, setShowPhoneVerification] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
-  const [tempUser, setTempUser] = useState<any>(null);
+  const [expectedOtp, setExpectedOtp] = useState<number | null>(null);
+  const [phoneVerificationCode, setPhoneVerificationCode] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -36,46 +40,146 @@ export default function RegisterPage() {
     }));
   };
 
+  const normalizePhoneNumber = (phone: string): string => {
+    console.log("Normalizing phone number:", phone);
+    // Remove all spaces, dashes, and parentheses
+    let normalized = phone.replace(/[\s\-()]/g, "");
+    
+    console.log("Input phone:", phone, "After cleanup:", normalized);
+    
+    // If starts with 0, replace with +254
+    if (normalized.startsWith("0")) {
+      normalized = "+254" + normalized.substring(1);
+    }
+    // If starts with 254 (without +), add +
+    else if (normalized.startsWith("254") && !normalized.startsWith("+")) {
+      normalized = "+" + normalized;
+    }
+    // If doesn't start with + or 0 or 254, assume it's missing country code
+    else if (!normalized.startsWith("+") && !normalized.startsWith("254")) {
+      normalized = "+254" + normalized;
+    }
+    
+    // Validate E.164 format: +254XXXXXXXXX (should be 13 characters total)
+    console.log("Normalized phone:", normalized, "Length:", normalized.length);
+    
+    return normalized;
+  };
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
+    setPhoneVerificationCode(""); // Clear previous OTP input
     try {
-      // Send verification email (creates temp user)
-      const result = await sendVerificationEmail(formData.email, formData.password);
-      if (result.success && result.tempUser) {
-        setTempUser(result.tempUser);
-        setShowEmailVerification(true);
+      const normalizedPhone = normalizePhoneNumber(formData.phoneNumber);
+      setFormData((prev) => ({ ...prev, phoneNumber: normalizedPhone }));
+      
+      const phoneResult = await sendPhoneOTP(normalizedPhone);
+      
+      if (phoneResult.success && phoneResult.otp) {
+        setExpectedOtp(phoneResult.otp);
+        setShowPhoneVerification(true);
       } else {
-        setError("Please use a valid email address.");
+        setError(phoneResult.message || "Failed to send phone verification code.");
       }
     } catch (err: any) {
       console.error("Verification error:", err);
-      if (err.code === "auth/email-already-in-use") {
-        setShowEmailExistsDialog(true);
-      } else {
-        setError("Please use a valid email address.");
-      }
+      setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleVerifyAndRegister = async () => {
+  const handleVerifyPhoneAndProceed = async () => {
     setError(null);
     setIsLoading(true);
     try {
-      // Check if email is verified
-      const isVerified = await checkEmailVerified(tempUser);
+      if (!phoneVerificationCode || phoneVerificationCode.length < 6) {
+        setError("Please enter the 6-digit verification code.");
+        setIsLoading(false);
+        return;
+      }
+
+      if (!expectedOtp) {
+        setError("OTP session expired. Please request a new code.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Verify phone code
+      const phoneVerifyResult = await verifyPhoneOTP(expectedOtp, phoneVerificationCode);
       
-      if (!isVerified) {
+      if (!phoneVerifyResult.success) {
+        setError(phoneVerifyResult.message);
+        setIsLoading(false);
+        return;
+      }
+
+      // Phone verified! Now proceed to email verification
+      setShowPhoneVerification(false);
+      setShowEmailVerification(true);
+    } catch (err: any) {
+      console.error("Phone verification error:", err);
+      setError(err.message || "An error occurred during phone verification.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleVerifyEmailAndRegister = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      // Step 2: Create Auth user and send email verification
+      const result = await createUserAndSendVerification(formData.email, formData.password);
+      
+      if (!result.success || !result.tempUser) {
+        setError(result.message || "Failed to create account.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Wait for user to verify email
+      setError(null);
+      setIsLoading(false);
+      
+      // Show message to check email
+      alert("Please check your email and click the verification link. Then click 'Complete Registration' below.");
+    } catch (err: any) {
+      console.error("Email verification error:", err);
+      if (err.code === "auth/email-already-in-use") {
+        setShowEmailExistsDialog(true);
+        setShowEmailVerification(false);
+      } else {
+        setError(err.message || "An error occurred.");
+      }
+      setIsLoading(false);
+    }
+  };
+
+  const handleCompleteRegistration = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      
+      if (!user) {
+        setError("Session expired. Please start registration again.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Check if email is verified
+      await user.reload();
+      if (!user.emailVerified) {
         setError("Please verify your email first. Check your inbox for the verification link.");
         setIsLoading(false);
         return;
       }
 
-      // Complete registration with Firestore data
-      const response = await completeUserRegistration(tempUser.uid, {
+      // Step 3: Both verifications complete - create Firestore record
+      const response = await completeUserRegistration(user.uid, {
         email: formData.email,
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -96,7 +200,6 @@ export default function RegisterPage() {
       setIsLoading(false);
     }
   };
-
   const handleLoginRedirect = () => {
     window.location.href = "/login";
   };
@@ -125,15 +228,15 @@ export default function RegisterPage() {
     );
   }
 
-  if (showEmailVerification) {
+  if (showPhoneVerification) {
     return (
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-2xl font-black text-black uppercase tracking-tight">
-            Verify Your Email
+            Verify Your Phone Number
           </h2>
           <p className="text-sm text-black mt-2">
-            We've sent a verification link to <strong>{formData.email}</strong>
+            We've sent a verification code to <strong>{formData.phoneNumber}</strong>
           </p>
         </div>
         {error && (
@@ -143,11 +246,18 @@ export default function RegisterPage() {
         )}
         <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-md">
           <p className="text-sm text-black font-medium mb-4">
-            Please check your email and click the verification link to complete registration.
+            Enter the 6-digit code sent to your phone.
           </p>
+          <input
+            type="text"
+            value={phoneVerificationCode}
+            onChange={(e) => setPhoneVerificationCode(e.target.value)}
+            placeholder="000000"
+            className="w-full bg-white border border-[#e57373] rounded-[10px] px-4 py-3 text-black placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-[#f44236] transition-colors text-center text-lg tracking-widest font-bold mb-4"
+          />
           <button
-            onClick={handleVerifyAndRegister}
-            disabled={isLoading}
+            onClick={handleVerifyPhoneAndProceed}
+            disabled={isLoading || phoneVerificationCode.length !== 6}
             className="w-full bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70"
           >
             {isLoading ? (
@@ -156,14 +266,71 @@ export default function RegisterPage() {
                 Verifying...
               </>
             ) : (
-              "I've Verified My Email"
+              "Verify Phone & Continue"
             )}
           </button>
           <button
-            onClick={() => setShowEmailVerification(false)}
+            onClick={() => {
+              setShowPhoneVerification(false);
+              setPhoneVerificationCode("");
+              setExpectedOtp(null);
+            }}
             className="w-full mt-3 bg-white hover:bg-gray-100 text-black font-black py-3 rounded-[10px] border-2 border-[#f44236] transition-all uppercase"
           >
             Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (showEmailVerification) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-2xl font-black text-black uppercase tracking-tight">
+            Verify Your Email
+          </h2>
+          <p className="text-sm text-black mt-2">
+            Almost done! Now verify your email: <strong>{formData.email}</strong>
+          </p>
+        </div>
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+            <p className="text-sm text-red-700 font-bold">{error}</p>
+          </div>
+        )}
+        <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-md">
+          <p className="text-sm text-black font-medium mb-4">
+            ✓ Phone verified successfully!
+          </p>
+          <button
+            onClick={handleVerifyEmailAndRegister}
+            disabled={isLoading}
+            className="w-full bg-[#f44236] hover:bg-black text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70 mb-4"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="inline mr-2 h-5 w-5 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send Email Verification"
+            )}
+          </button>
+          <button
+            onClick={handleCompleteRegistration}
+            disabled={isLoading}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-3 rounded-[10px] transition-all uppercase disabled:opacity-70"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="inline mr-2 h-5 w-5 animate-spin" />
+                Completing...
+              </>
+            ) : (
+              "Complete Registration"
+            )}
           </button>
         </div>
       </div>
