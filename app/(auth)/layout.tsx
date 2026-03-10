@@ -10,15 +10,15 @@ export default function AuthLayout({
       <div className="relative w-full max-w-lg bg-surface border border-rim rounded-[10px] overflow-hidden">
         <div className="p-8 sm:p-10">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-brand flex items-center justify-center mb-4 rounded-[10px]">
-              <span className="text-white text-3xl font-bold tracking-tighter">
-                YP
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-lg border-2 border-brand/10">
+                <img src="/images/logo.jpg" alt="Yohpal Logo" className="w-full h-full object-cover" />
+              </div>
+              <span className="font-['Sora'] font-extrabold text-3xl tracking-tight text-fg">
+                YohPal <span className="text-brand">Hustle</span>
               </span>
             </div>
-            <h1 className="text-fg text-3xl font-black tracking-tight uppercase italic">
-              YohPal-Hustle
-            </h1>
-            <div className="h-1 w-12 bg-brand mt-2"></div>
+            <p className="text-fg-secondary text-sm font-medium">Empowering African Hustlers</p>
           </div>
           {children}
         </div>

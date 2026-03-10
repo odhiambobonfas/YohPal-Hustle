@@ -74,7 +74,7 @@ export default function SettingsPage() {
       <div className="mx-5 mt-6">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-[13px] font-semibold rounded-2xl py-3 transition"
+          className="w-full flex items-center justify-center gap-2 bg-brand/5 hover:bg-brand/10 border border-brand/20 text-brand text-[13px] font-semibold rounded-2xl py-3 transition"
         >
           <LogOut size={15} />
           Sign Out

@@ -115,7 +115,19 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="px-4 pt-4 pb-24 lg:px-6 space-y-5">
+    <div className="px-4 pt-4 pb-24 lg:px-6 space-y-6">
+      
+      {/* ── HEADER LOGO ────────────────────────────────────────── */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-lg border-2 border-brand/10">
+            <img src="/images/logo.jpg" alt="Yohpal Logo" className="w-full h-full object-cover" />
+          </div>
+          <span className="font-['Sora'] font-extrabold text-2xl tracking-tight text-fg">
+            YohPal <span className="text-brand">Hustle</span>
+          </span>
+        </div>
+      </div>
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <div
