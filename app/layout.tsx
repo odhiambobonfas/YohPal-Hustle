@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Roboto, Sora, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
@@ -7,6 +7,20 @@ const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-roboto",
+  display: "swap",
+});
+
+const sora = Sora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sora",
+  display: "swap",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -21,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${roboto.variable} ${sora.variable} ${plusJakarta.variable}`} suppressHydrationWarning>
       <head>
         {/* Preconnect to external origins used at runtime */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
