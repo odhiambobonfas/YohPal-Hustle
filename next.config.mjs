@@ -7,12 +7,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   compress: true,
   poweredByHeader: false,
-  optimizePackageImports: ["lucide-react"],
-  experimental: {
-    turbopack: {
-      root: __dirname,
-    },
-  },
+  // optimizePackageImports: ["lucide-react"], // Removed: not supported in Next.js 16+
+  // experimental: {
+  //   turbopack: {
+  //     root: __dirname,
+  //   },
+  // },
 };
 
 export default nextConfig;
