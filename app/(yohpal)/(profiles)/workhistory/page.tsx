@@ -27,7 +27,7 @@ export default function WorkHistoryPage() {
         {[
           { label: "Total Jobs",  value: "0", icon: <Briefcase size={16} className="text-blue-400" /> },
           { label: "Completed",   value: "0", icon: <CheckCircle2 size={16} className="text-green-400" /> },
-          { label: "Cancelled",   value: "0", icon: <XCircle size={16} className="text-red-400" /> },
+          { label: "Cancelled",   value: "0", icon: <XCircle size={16} className="text-brand" /> },
         ].map((s) => (
           <div key={s.label} className="bg-surface rounded-2xl px-3 py-4 flex flex-col items-center gap-1">
             {s.icon}

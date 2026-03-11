@@ -23,8 +23,8 @@
   --fg-muted:       156 163 175;   /* gray-400 */
 
   /* Brand sidebar gradient */
-  --sidebar-gradient: linear-gradient(160deg, #6a0015 0%, #94041d 55%, #b5052a 100%);
-  --brand-gradient:   linear-gradient(135deg, #94041d 0%, #b5052a 50%, #94041d 100%);
+  --sidebar-gradient: linear-gradient(160deg, #b52b0a 0%, #E8380D 55%, #f25a3d 100%);
+  --brand-gradient:   linear-gradient(135deg, #E8380D 0%, #f25a3d 50%, #E8380D 100%);
 }
 
 /* ── Dark theme tokens ───────────────────────────────────────────── */
