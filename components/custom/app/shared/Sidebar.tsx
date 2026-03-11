@@ -18,16 +18,16 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard",       icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/myjobs",          icon: Briefcase,       label: "My Jobs" },
-  { href: "/notifications",   icon: Bell,            label: "Notifications" },
-  { href: "/workhistory",     icon: History,         label: "Work History" },
-  { href: "/badges",          icon: Award,           label: "Badges" },
-  { href: "/reviews",         icon: MessageSquare,   label: "Reviews" },
-  { href: "/profile",         icon: User,            label: "Profile" },
-  { href: "/about",           icon: Info,            label: "About" },
-  { href: "/help-and-support",icon: HelpCircle,      label: "Help & Support" },
-  { href: "/settings",        icon: Settings,        label: "Settings" },
+  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/myjobs", icon: Briefcase, label: "My Jobs" },
+  { href: "/notifications", icon: Bell, label: "Notifications" },
+  { href: "/workhistory", icon: History, label: "Work History" },
+  { href: "/badges", icon: Award, label: "Badges" },
+  { href: "/reviews", icon: MessageSquare, label: "Reviews" },
+  { href: "/profile", icon: User, label: "Profile" },
+  { href: "/about", icon: Info, label: "About" },
+  { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
+  { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 interface SidebarProps {
@@ -38,7 +38,13 @@ interface SidebarProps {
   userImage?: string | null;
 }
 
-export default function Sidebar({ isOpen = false, onClose, userInitials = "YH", userName, userImage }: SidebarProps) {
+export default function Sidebar({
+  isOpen = false,
+  onClose,
+  userInitials = "YH",
+  userName,
+  userImage,
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -60,9 +66,7 @@ export default function Sidebar({ isOpen = false, onClose, userInitials = "YH", 
         `}
       >
         {/* ── CRIMSON HEADER ─────────────────────────────────── */}
-        <div
-          className="relative px-5 pt-5 pb-4 overflow-hidden flex-shrink-0 bg-sidebar-gradient"
-        >
+        <div className="relative px-5 pt-5 pb-4 overflow-hidden flex-shrink-0 bg-sidebar-gradient">
           {/* Decorative circles */}
           <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
           <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-white/5 pointer-events-none" />
@@ -107,7 +111,9 @@ export default function Sidebar({ isOpen = false, onClose, userInitials = "YH", 
           {/* Online badge */}
           <div className="flex items-center gap-1.5 mt-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            <span className="text-green-300 text-[11px] font-semibold">Available for work</span>
+            <span className="text-green-300 text-[11px] font-semibold">
+              Available for work
+            </span>
           </div>
         </div>
 
