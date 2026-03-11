@@ -240,8 +240,8 @@ export default function RegisterPage() {
           </p>
         </div>
         {error && (
-          <div className="bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 p-4 rounded-md">
-            <p className="text-sm text-red-700 dark:text-red-400 font-bold">{error}</p>
+          <div className="bg-brand-50 dark:bg-brand-900/10 border-l-4 border-brand p-4 rounded-md">
+            <p className="text-sm text-brand font-bold">{error}</p>
           </div>
         )}
         <div className="bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 p-6 rounded-md">
