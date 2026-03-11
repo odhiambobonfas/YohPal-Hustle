@@ -33,12 +33,31 @@ export default async function JobDetailsPage({ params }: PageProps) {
     notFound();
   }
 
-  return (
-    <JobDetails
-      job={{
-        ...jobResult.data,
-        location: locationResult.data ?? null,
-      }}
-    />
-  );
+  // Map Firestore job data to JobDetailData shape
+  const jobData = jobResult.data;
+  const jobDetail: import("../job-details").JobDetailData = {
+    // Required fields with fallback or transformation
+    title: jobData.jobTitle || "Untitled Job",
+    client: jobData.client || "",
+    clientName: jobData.clientName || "",
+    id: jobId,
+    description: jobData.description || "",
+    status: jobData.status || "pending",
+    payType: jobData.payType || "",
+    hours: jobData.hours || 0,
+    start: jobData.startDate || "",
+    end: jobData.endDate || "",
+    startsIn: jobData.startsIn || "",
+    progress: jobData.progress || 0,
+    jobFee: jobData.jobFee || 0,
+    transportFee: jobData.transportFee || 0,
+    tax: jobData.tax || 0,
+    total: jobData.total || 0,
+    paymentMethod: jobData.paymentMethod || "",
+    dueDate: jobData.dueDate || "",
+    yohpalFee: jobData.yohpalFee || 0,
+    vat: jobData.vat || 0,
+    location: locationResult.data ?? null,
+  };
+  return <JobDetails job={jobDetail} />;
 }
