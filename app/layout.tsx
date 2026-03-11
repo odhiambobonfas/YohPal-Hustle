@@ -35,15 +35,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} ${sora.variable} ${plusJakarta.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${roboto.variable} ${sora.variable} ${plusJakarta.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Preconnect to external origins used at runtime */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="icon" href="/images/logo.jpg" type="image/jpeg" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://ipapi.co" />
         <link rel="dns-prefetch" href="https://maps.googleapis.com" />
         <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
-        <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com" />
+        <link
+          rel="dns-prefetch"
+          href="https://identitytoolkit.googleapis.com"
+        />
         {/* Prevent flash of wrong theme on load */}
         <script
           dangerouslySetInnerHTML={{
