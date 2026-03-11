@@ -15,11 +15,11 @@ const FILTERS = CATEGORY_FILTERS;
 type Filter = CategoryFilter;
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function ViewAllServices() {
+export default function ViewAllServices({ initialFilter = "All" }: { initialFilter?: Filter }) {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [activeFilter, setActiveFilter] = useState<Filter>("All");
+  const [activeFilter, setActiveFilter] = useState<Filter>(initialFilter);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [selectedCatId, setSelectedCatId] = useState<number | null>(null);
   const [showPostJob, setShowPostJob] = useState(false);
@@ -50,7 +50,7 @@ export default function ViewAllServices() {
 
   return (
     <div
-      className="min-h-screen bg-[#0e0e0e]"
+      className="min-h-screen bg-page"
       style={{ paddingBottom: selectedRole ? 88 : 0 }}
     >
       {/* ── Sticky header ──────────────────────────────────────────────── */}
@@ -58,10 +58,9 @@ export default function ViewAllServices() {
 
         {/* Brand title bar */}
         <div
-          className="px-4 pt-5 pb-4"
-          style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
+          className="px-4 pt-5 pb-4 bg-brand-gradient"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 max-w-5xl mx-auto">
             <button
               onClick={() => router.back()}
               className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0"
@@ -79,27 +78,28 @@ export default function ViewAllServices() {
         </div>
 
         {/* Dark search + filter bar */}
-        <div className="bg-[#111] border-b border-[#222] px-4 pt-3 pb-3">
+        <div className="bg-surface border-b border-rim px-4 pt-3 pb-3">
+          <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-2">
-            <div className="flex-1 flex items-center gap-2.5 bg-[#1c1c1c] border border-[#2a2a2a] rounded-2xl px-3.5 py-2.5">
-              <Search size={14} className="text-[#666] flex-shrink-0" />
+            <div className="flex-1 flex items-center gap-2.5 bg-surface-alt border border-rim rounded-2xl px-3.5 py-2.5">
+              <Search size={14} className="text-fg-muted flex-shrink-0" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search for a skill or category…"
-                className="flex-1 bg-transparent text-white text-[13px] placeholder:text-[#555] outline-none"
+                className="flex-1 bg-transparent text-fg text-[13px] placeholder:text-fg-muted outline-none"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="text-[#666] hover:text-[#aaa] text-[18px] leading-none"
+                  className="text-fg-muted hover:text-fg-secondary text-[18px] leading-none"
                 >
                   ×
                 </button>
               )}
             </div>
-            <button className="w-10 h-10 rounded-2xl bg-[#1c1c1c] border border-[#2a2a2a] flex items-center justify-center flex-shrink-0">
-              <SlidersHorizontal size={15} className="text-[#666]" />
+            <button className="w-10 h-10 rounded-2xl bg-surface-alt border border-rim flex items-center justify-center flex-shrink-0">
+              <SlidersHorizontal size={15} className="text-fg-muted" />
             </button>
           </div>
 
@@ -117,7 +117,7 @@ export default function ViewAllServices() {
                   className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all border ${
                     active
                       ? "bg-[#94041d] text-white border-[#94041d]"
-                      : "bg-[#1c1c1c] text-[#777] border-[#2a2a2a] hover:border-[#444]"
+                      : "bg-surface-alt text-fg-secondary border-rim hover:border-fg-muted"
                   }`}
                 >
                   {active && <span className="text-[10px]">✓</span>}
@@ -126,20 +126,21 @@ export default function ViewAllServices() {
               );
             })}
           </div>
-        </div>
+          </div>{/* max-w-5xl */}
+        </div>{/* search+filter bar */}
 
-      </div>
+      </div>{/* sticky header */}
 
       {/* ── Body ───────────────────────────────────────────────────────── */}
-      <div className="px-4 py-4 max-w-lg mx-auto lg:max-w-3xl space-y-2.5">
+      <div className="px-4 py-4 max-w-5xl mx-auto space-y-2.5">
 
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 rounded-3xl bg-[#1c1c1c] flex items-center justify-center mb-4 text-3xl">
+              <div className="w-16 h-16 rounded-3xl bg-surface-alt flex items-center justify-center mb-4 text-3xl">
               🔍
             </div>
-            <p className="text-[#888] font-semibold text-[15px]">No categories found</p>
-            <p className="text-[#555] text-[13px] mt-1">Try a different filter or search term</p>
+            <p className="text-fg-secondary font-semibold text-[15px]">No categories found</p>
+            <p className="text-fg-muted text-[13px] mt-1">Try a different filter or search term</p>
           </div>
         ) : (
           filtered.map((cat) => {
@@ -149,12 +150,11 @@ export default function ViewAllServices() {
             return (
               <div
                 key={cat.id}
-                className="rounded-2xl overflow-hidden transition-all duration-200"
+                className="rounded-2xl overflow-hidden transition-all duration-200 bg-surface"
                 style={{
-                  backgroundColor: "#1a1a1a",
                   border: isSelected
                     ? `1.5px solid ${cat.accent}55`
-                    : "1px solid #2a2a2a",
+                    : "1px solid var(--card-border)",
                 }}
               >
                 {/* Header row — tap to expand / collapse */}
@@ -173,8 +173,8 @@ export default function ViewAllServices() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[14px] text-white leading-snug">{cat.name}</p>
-                    <p className="text-[11px] text-[#666] mt-0.5 truncate">{cat.subtitle}</p>
+                    <p className="font-semibold text-[14px] text-fg leading-snug">{cat.name}</p>
+                    <p className="text-[11px] text-fg-muted mt-0.5 truncate">{cat.subtitle}</p>
                   </div>
 
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -186,7 +186,7 @@ export default function ViewAllServices() {
                     </span>
                     <ChevronDown
                       size={16}
-                      className="text-[#555] transition-transform duration-200"
+                      className="text-fg-muted transition-transform duration-200"
                       style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                     />
                   </div>
@@ -194,7 +194,7 @@ export default function ViewAllServices() {
 
                 {/* Expanded — selectable role list */}
                 {isOpen && (
-                  <div className="border-t border-[#222] px-4 pt-2 pb-4">
+                  <div className="border-t border-rim px-4 pt-2 pb-4">
                     <p
                       className="text-[11px] font-bold mt-1 mb-1"
                       style={{ color: cat.accent }}
@@ -212,7 +212,7 @@ export default function ViewAllServices() {
                             setSelectedRole(role);
                             setSelectedCatId(cat.id);
                           }}
-                          className="flex items-center gap-3.5 py-3 border-b border-[#1f1f1f] cursor-pointer last:border-none"
+                          className="flex items-center gap-3.5 py-3 border-b border-rim cursor-pointer last:border-none"
                         >
                           {/* Radio indicator */}
                           <div
@@ -220,7 +220,7 @@ export default function ViewAllServices() {
                             style={{
                               border: isChecked
                                 ? `2px solid ${cat.accent}`
-                                : "2px solid #444",
+                                : "2px solid var(--card-border)",
                               backgroundColor: isChecked
                                 ? cat.accent + "22"
                                 : "transparent",
@@ -235,7 +235,7 @@ export default function ViewAllServices() {
                           </div>
                           <span
                             className={`text-[14px] ${
-                              isChecked ? "text-white font-medium" : "text-[#aaa]"
+                              isChecked ? "text-fg font-medium" : "text-fg-secondary"
                             }`}
                           >
                             {role}
@@ -253,13 +253,15 @@ export default function ViewAllServices() {
 
       {/* ── Single CTA — appears once a role is selected ─── */}
       {selectedRole && (
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] px-4 py-3 bg-[#0e0e0e] border-t border-[#1f1f1f] z-50">
-          <button
-            onClick={() => setShowPostJob(true)}
-            className="w-full py-3.5 rounded-xl bg-[#e03c2e] border-none text-white text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2 hover:bg-[#c8352a] transition-colors"
-          >
-            ▶ View &ldquo;{selectedRole}&rdquo;
-          </button>
+        <div className="fixed bottom-0 left-0 right-0 lg:left-56 px-4 py-3 bg-surface border-t border-rim z-50">
+          <div className="max-w-xl mx-auto">
+            <button
+              onClick={() => setShowPostJob(true)}
+              className="w-full py-3.5 rounded-xl bg-[#e03c2e] border-none text-white text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2 hover:bg-[#c8352a] transition-colors"
+            >
+              ▶ View &ldquo;{selectedRole}&rdquo;
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ChevronLeft, CheckCircle2, Loader2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Loader2, Clock, Users, Minus, Plus } from "lucide-react";
 // import { submitPostJob } from "@/services/client/hustle"; // wire up with auth token
 // import type { PostJobPayload } from "@/types/actions/hustle.types";
 
@@ -71,21 +71,21 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
   // ── Success screen ──────────────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col items-center justify-center gap-5 px-8 text-center">
+      <div className="min-h-screen bg-page flex flex-col items-center justify-center gap-5 px-8 text-center">
         <div className="w-20 h-20 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
           <CheckCircle2 size={44} className="text-green-500" />
         </div>
         <div className="max-w-sm space-y-2">
-          <h2 className="text-[22px] font-bold text-gray-900 dark:text-white">Job Posted!</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-[14px] leading-relaxed">
+          <h2 className="text-[22px] font-bold text-fg">Job Posted!</h2>
+          <p className="text-fg-secondary text-[14px] leading-relaxed">
             Your job for{" "}
-            <strong className="text-gray-900 dark:text-white">{jobTitle}</strong> has been
+            <strong className="text-fg">{jobTitle}</strong> has been
             submitted. Hustlers nearby will be notified.
           </p>
         </div>
         <button
           onClick={onBack}
-          className="mt-2 px-8 py-3.5 rounded-xl bg-brand text-white text-[14px] font-bold hover:bg-brand-dark transition-colors"
+          className="mt-2 px-8 py-3.5 rounded-xl text-white text-[14px] font-bold transition-all shadow-lg shadow-brand/25 active:scale-95 bg-brand-gradient"
         >
           ← Back to Categories
         </button>
@@ -95,25 +95,24 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
 
   // ── Form screen ─────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 pb-28">
+    <div className="min-h-screen bg-page pb-28">
       {/* Header */}
       <div className="sticky top-0 z-20">
         <div
-          className="px-4 pt-5 pb-4"
-          style={{ background: "linear-gradient(135deg, #6a0015 0%, #94041d 45%, #b5052a 100%)" }}
+          className="px-4 pt-6 pb-5 bg-brand-gradient"
         >
-          <div className="flex items-center gap-3 max-w-lg mx-auto">
+          <div className="flex items-center gap-3 max-w-2xl mx-auto">
             <button
               onClick={onBack}
-              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center flex-shrink-0 transition-colors"
+              className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center flex-shrink-0 transition-colors"
             >
               <ChevronLeft size={18} className="text-white" />
             </button>
             <div className="flex-1">
-              <p className="text-white/60 text-[11px] font-medium">Post a Job</p>
-              <h1 className="text-white font-bold text-[18px] leading-tight">Create a Job</h1>
+              <p className="text-white/60 text-[10px] font-semibold uppercase tracking-widest">Post a Job</p>
+              <h1 className="text-white font-bold text-[19px] leading-tight">Create a Job</h1>
             </div>
-            <div className="bg-white/15 border border-white/20 rounded-full px-3 py-1 max-w-[140px] overflow-hidden">
+            <div className="bg-white/20 border border-white/30 rounded-full px-3 py-1.5 max-w-[140px] overflow-hidden">
               <span className="text-white text-[11px] font-semibold block truncate">{selectedRole}</span>
             </div>
           </div>
@@ -121,50 +120,58 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
       </div>
 
       {/* Form */}
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
         {/* Job Title */}
-        <div>
-          <label className="block text-[13px] font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Job Title
-          </label>
-          <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-            <span className="text-lg leading-none">💼</span>
-            <input
-              type="text"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-              placeholder="e.g. Poultry farmer"
-              className="flex-1 bg-transparent outline-none text-[14px] text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
-            />
+        <div className="bg-surface rounded-2xl border border-rim shadow-sm overflow-hidden">
+          <div className="px-5 pt-5 pb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-5 rounded-full bg-brand flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">1</span>
+              <label className="text-[13px] font-bold text-fg tracking-wide">Job Title</label>
+            </div>
+            <div className="flex items-center gap-3 bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+              <span className="text-lg leading-none">💼</span>
+              <input
+                type="text"
+                value={jobTitle}
+                onChange={(e) => setJobTitle(e.target.value)}
+                placeholder="e.g. Poultry farmer"
+                className="flex-1 bg-transparent outline-none text-[14px] text-fg placeholder:text-fg-muted"
+              />
+            </div>
           </div>
         </div>
 
         {/* Job Description */}
-        <div className="relative">
-          <label className="block text-[13px] font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Job Description
-          </label>
-          <div className="flex items-start gap-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-            <span className="text-lg leading-none mt-0.5">📄</span>
-            <textarea
-              ref={descRef}
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-                setShowSuggestions(e.target.value.length < 5);
-              }}
-              onFocus={() => setShowSuggestions(description.length < 5)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-              placeholder="Describe the job, skills needed, and any other details…"
-              rows={4}
-              className="flex-1 bg-transparent outline-none text-[14px] text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none leading-relaxed"
-            />
+        <div className="bg-surface rounded-2xl border border-rim shadow-sm relative">
+          <div className="px-5 pt-5 pb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-5 rounded-full bg-brand flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">2</span>
+              <label className="text-[13px] font-bold text-fg tracking-wide">Job Description</label>
+              <span className="ml-auto text-[11px] text-fg-muted">{description.length}/500</span>
+            </div>
+            <div className="flex items-start gap-3 bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+              <span className="text-lg leading-none mt-0.5">📄</span>
+              <textarea
+                ref={descRef}
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                  setShowSuggestions(e.target.value.length < 5);
+                }}
+                onFocus={() => setShowSuggestions(description.length < 5)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                placeholder="Describe the job, skills needed, and any other details…"
+                rows={4}
+                maxLength={500}
+                className="flex-1 bg-transparent outline-none text-[14px] text-fg placeholder:text-fg-muted resize-none leading-relaxed"
+              />
+            </div>
           </div>
           {/* Quick-fill dropdown */}
           {showSuggestions && (
-            <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden z-50">
-              <p className="px-4 py-2 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide border-b border-gray-100 dark:border-gray-800">
+            <div className="absolute left-0 right-0 top-full mt-1 bg-surface rounded-xl border border-rim shadow-xl overflow-hidden z-50">
+              <p className="px-4 py-2 text-[10px] font-bold text-fg-muted uppercase tracking-wide border-b border-rim">
                 Quick-fill
               </p>
               {DESCRIPTION_SUGGESTIONS.map((s, i) => (
@@ -175,7 +182,7 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
                     setShowSuggestions(false);
                     descRef.current?.focus();
                   }}
-                  className="w-full text-left px-4 py-3 text-[13px] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-50 dark:border-gray-800 last:border-none transition-colors"
+                  className="w-full text-left px-4 py-3 text-[13px] text-fg-secondary hover:bg-surface-alt border-b border-rim last:border-none transition-colors"
                 >
                   &ldquo;{s}&rdquo;
                 </button>
@@ -185,84 +192,108 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
         </div>
 
         {/* Schedule — Start & End */}
-        <div>
-          <label className="block text-[13px] font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Schedule
-          </label>
-          <div className="space-y-3">
-            {/* Start */}
-            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-              <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1.5">
-                📅 Start Date &amp; Time
-              </p>
-              <input
-                type="datetime-local"
-                value={startDate}
-                onChange={(e) => { setStartDate(e.target.value); }}
-                className="w-full bg-transparent outline-none text-[14px] text-gray-800 dark:text-white dark:[color-scheme:dark]"
-              />
+        <div className="bg-surface rounded-2xl border border-rim shadow-sm overflow-hidden">
+          <div className="px-5 pt-5 pb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-5 rounded-full bg-brand flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">3</span>
+              <label className="text-[13px] font-bold text-fg tracking-wide">Schedule</label>
             </div>
-            {!startDate && (
-              <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">Start date & time is required</p>
-            )}
-
-            {/* End */}
-            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-              <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1.5">
-                🏁 End Date &amp; Time
-              </p>
-              <input
-                type="datetime-local"
-                value={endDate}
-                min={startDate || undefined}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full bg-transparent outline-none text-[14px] text-gray-800 dark:text-white dark:[color-scheme:dark]"
-              />
-            </div>
-            {!endDate && (
-              <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">End date & time is required</p>
-            )}
-            {startDate && endDate && new Date(endDate) <= new Date(startDate) && (
-              <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">End must be after start</p>
-            )}
-
-            {/* Duration pill */}
-            {duration && (
-              <div className="flex items-center gap-2 bg-brand/5 dark:bg-brand/10 border border-brand/20 rounded-xl px-4 py-2.5">
-                <span className="text-[14px]">⏱</span>
-                <p className="text-[13px] font-semibold text-brand">Duration: {duration}</p>
+            <div className="space-y-3">
+              {/* Start */}
+              <div className="bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                <p className="text-[10px] font-bold text-fg-muted uppercase tracking-wide mb-1.5">
+                  📅 Start Date &amp; Time
+                </p>
+                <input
+                  type="datetime-local"
+                  value={startDate}
+                  onChange={(e) => { setStartDate(e.target.value); }}
+                  className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
+                />
               </div>
-            )}
+              {!startDate && (
+                <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">Start date & time is required</p>
+              )}
+
+              {/* End */}
+              <div className="bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                <p className="text-[10px] font-bold text-fg-muted uppercase tracking-wide mb-1.5">
+                  🏁 End Date &amp; Time
+                </p>
+                <input
+                  type="datetime-local"
+                  value={endDate}
+                  min={startDate || undefined}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
+                />
+              </div>
+              {!endDate && (
+                <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">End date & time is required</p>
+              )}
+              {startDate && endDate && new Date(endDate) <= new Date(startDate) && (
+                <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">End must be after start</p>
+              )}
+
+              {/* Duration pill */}
+              {duration && (
+                <div className="flex items-center gap-2 bg-brand/5 dark:bg-brand/10 border border-brand/20 rounded-xl px-4 py-2.5">
+                  <Clock size={14} className="text-brand flex-shrink-0" />
+                  <p className="text-[13px] font-semibold text-brand">Duration: {duration}</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Number of Hustlers */}
-        <div>
-          <label className="block text-[13px] font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Number of Hustlers Needed
-          </label>
-          <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-            <span className="text-lg leading-none">👥</span>
-            <input
-              type="number"
-              value={hustlersCount}
-              onChange={(e) => setHustlersCount(e.target.value)}
-              placeholder="e.g. 3"
-              min={1}
-              className="flex-1 bg-transparent outline-none text-[14px] text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600"
-            />
+        <div className="bg-surface rounded-2xl border border-rim shadow-sm overflow-hidden">
+          <div className="px-5 pt-5 pb-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-5 rounded-full bg-brand flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">4</span>
+              <label className="text-[13px] font-bold text-fg tracking-wide">Hustlers Needed</label>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setHustlersCount(h => String(Math.max(1, (parseInt(h) || 2) - 1)))}
+                className="w-11 h-11 rounded-xl bg-surface-alt border border-rim flex items-center justify-center text-fg-secondary hover:opacity-80 active:scale-95 transition-all flex-shrink-0"
+              >
+                <Minus size={16} />
+              </button>
+              <div className="flex-1 bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                <div className="flex items-center gap-3 justify-center">
+                  <Users size={15} className="text-fg-muted flex-shrink-0" />
+                  <input
+                    type="number"
+                    value={hustlersCount}
+                    onChange={(e) => setHustlersCount(e.target.value)}
+                    placeholder="0"
+                    min={1}
+                    className="w-16 bg-transparent outline-none text-[15px] font-bold text-fg placeholder:text-fg-muted text-center"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setHustlersCount(h => String(Math.min(99, (parseInt(h) || 0) + 1)))}
+                className="w-11 h-11 rounded-xl bg-brand/10 dark:bg-brand/20 border border-brand/20 flex items-center justify-center text-brand hover:bg-brand/20 dark:hover:bg-brand/30 active:scale-95 transition-all flex-shrink-0"
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+            <p className="text-[11px] text-fg-muted mt-2 pl-1">Tap + / − to adjust the number of hustlers</p>
           </div>
-          <p className="text-[11px] text-gray-400 dark:text-gray-600 mt-1.5 pl-1">Enter the number of hustlers required</p>
         </div>
       </div>
 
       {/* Fixed bottom submit */}
-      <div className="fixed bottom-0 left-0 right-0 px-4 py-3 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-t border-gray-100 dark:border-gray-800 z-50">
-        <div className="max-w-lg mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 lg:left-56 px-4 py-3 bg-surface/95 backdrop-blur-sm border-t border-rim z-50">
+        <div className="max-w-2xl mx-auto">
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full py-4 rounded-xl bg-brand text-white text-[15px] font-bold flex items-center justify-center gap-2 hover:bg-brand-dark active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+            className="w-full py-4 rounded-xl text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg shadow-brand/25 bg-brand-gradient"
           >
             {loading ? (
               <>
@@ -270,7 +301,10 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
                 Submitting…
               </>
             ) : (
-              "▶ Submit Job"
+              <>
+                <span>▶</span>
+                Submit Job
+              </>
             )}
           </button>
         </div>
