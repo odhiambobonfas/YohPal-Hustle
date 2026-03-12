@@ -21,6 +21,7 @@ const navItems = [
   { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
+import { useLanguage } from "@/providers/LanguageProvider";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -38,6 +39,20 @@ export default function Sidebar({
   userImage,
 }: SidebarProps) {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: t('nav.dashboard') },
+    { href: "/myjobs", icon: Briefcase, label: t('nav.myJobs') },
+    { href: "/notifications", icon: Bell, label: t('nav.notifications') },
+    { href: "/workhistory", icon: History, label: t('nav.workHistory') },
+    // { href: "/badges", icon: Award, label: t('nav.badges') },
+    // { href: "/reviews", icon: MessageSquare, label: t('nav.reviews') },
+    // { href: "/profile", icon: User, label: t('nav.profile') },
+    // { href: "/about", icon: Info, label: t('nav.about') },
+    { href: "/help-and-support", icon: HelpCircle, label: t('nav.helpAndSupport') },
+    { href: "/settings", icon: Settings, label: t('nav.settings') },
+  ];
 
   return (
     <>
@@ -89,22 +104,22 @@ export default function Sidebar({
 
           {/* Big title */}
           <h1 className="text-[20px] font-black text-white leading-none tracking-tight">
-            Hustle
+            {t('sidebar.hustle')}
           </h1>
 
           {/* Welcome + tagline */}
           <p className="text-white/70 text-[11px] font-medium mt-1">
-            {userName ? `Hey, ${userName.split(" ")[0]} 👋` : "Welcome back 👋"}
+            {userName ? `${t('sidebar.hey')}, ${userName.split(" ")[0]} 👋` : `${t('common.welcomeBack')} 👋`}
           </p>
           <p className="text-white/50 text-[11px] mt-0.5 leading-snug">
-            Filled with professional skills
+            {t('sidebar.filledWithSkills')}
           </p>
 
           {/* Online badge */}
           <div className="flex items-center gap-1.5 mt-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
             <span className="text-green-300 text-[11px] font-semibold">
-              Available for work
+              {t('dashboard.availableForWork')}
             </span>
           </div>
         </div>
@@ -125,7 +140,7 @@ export default function Sidebar({
                       : "text-fg-secondary hover:bg-surface-alt hover:text-fg"
                   }`}
                 >
-                  <Icon size={16} />
+                  {/* <Icon size={16} /> */}
                   <span className="text-[12px] font-medium">{label}</span>
                   {isActive && (
                     <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/60" />
@@ -137,7 +152,7 @@ export default function Sidebar({
 
           {/* Bottom version tag */}
           <div className="px-5 py-3 border-t border-rim">
-            <p className="text-[11px] text-fg-muted">YohPal Hustle v1.0</p>
+            <p className="text-[11px] text-fg-muted">{t('sidebar.version')}</p>
           </div>
         </div>
       </aside>

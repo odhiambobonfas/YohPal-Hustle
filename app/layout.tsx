@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Sora, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { LanguageProvider } from "@/providers/LanguageProvider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -64,7 +65,11 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-page text-fg">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -6,18 +6,7 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import { useLocationCity } from "@/hooks/useLocationCity";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-
-const PAGE_TITLES: Record<string, string> = {
-  "/dashboard": "Dashboard",
-  "/myjobs": "My Jobs",
-  "/notifications": "Notifications",
-  "/workhistory": "Work History",
-  "/badges": "Badges",
-  "/reviews": "Reviews",
-  "/edit-profile": "Edit Profile",
-  "/help-and-support": "Help & Support",
-  "/settings": "Settings",
-};
+import { useLanguage } from "@/providers/LanguageProvider";
 
 export default function ShellLayout({
   children,
@@ -26,9 +15,24 @@ export default function ShellLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const title = PAGE_TITLES[pathname] ?? "YohPal Hustle";
   const { city, loading: locationLoading } = useLocationCity();
   const { initials, displayName, photoURL } = useCurrentUser();
+  const { t } = useLanguage();
+
+  const PAGE_TITLES: Record<string, string> = {
+    "/dashboard":        t('nav.dashboard'),
+    "/myjobs":           t('nav.myJobs'),
+    "/notifications":    t('nav.notifications'),
+    "/workhistory":      t('nav.workHistory'),
+    "/badges":           t('nav.badges'),
+    "/reviews":          t('nav.reviews'),
+    "/edit-profile":     t('nav.editProfile'),
+    "/about":            t('nav.about'),
+    "/help-and-support": t('nav.helpAndSupport'),
+    "/settings":         t('nav.settings'),
+  };
+
+  const title = PAGE_TITLES[pathname] ?? "YohPal Hustle";
 
   return (
     <div className="min-h-screen bg-page">
