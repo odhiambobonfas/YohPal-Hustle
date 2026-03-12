@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Bell, Menu, ArrowLeft, MapPin, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 interface TopNavbarProps {
   title: string;
@@ -29,6 +31,7 @@ export default function TopNavbar({
   onMenuClick,
 }: TopNavbarProps) {
   const { resolvedTheme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
   return (
     <header className="bg-brand sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-md">
       {/* Left — Back or Menu */}
@@ -53,14 +56,14 @@ export default function TopNavbar({
         {locationLoading ? (
           <div className="flex items-center gap-1.5">
             <MapPin size={13} className="text-white/50 flex-shrink-0" />
-            <span className="text-[13px] text-white/50 font-medium animate-pulse">Locating…</span>
+            <span className="text-[13px] text-white/50 font-medium animate-pulse">{t('common.locating')}…</span>
           </div>
         ) : location ? (
           <>
             <div className="flex items-center gap-1">
               <MapPin size={12} className="text-white/70 flex-shrink-0" />
               <p className="text-[11px] text-white/70 font-medium leading-none">
-                Your location
+                {t('common.yourLocation')}
               </p>
             </div>
             <p className="text-[14px] font-bold text-white mt-0.5 leading-none tracking-wide truncate max-w-[160px]">
@@ -72,8 +75,9 @@ export default function TopNavbar({
         )}
       </div>
 
-      {/* Right — Theme toggle + Notifications + Avatar */}
+      {/* Right — Language + Theme toggle + Notifications + Avatar */}
       <div className="flex items-center gap-2">
+        <LanguageSwitcher />
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
