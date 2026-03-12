@@ -7,13 +7,9 @@ import {
   X,
   LayoutDashboard,
   Briefcase,
-  History,
-  Award,
-  MessageSquare,
   Bell,
   Settings,
   User,
-  Info,
   HelpCircle,
 } from "lucide-react";
 
@@ -21,11 +17,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/myjobs", icon: Briefcase, label: "My Jobs" },
   { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/workhistory", icon: History, label: "Work History" },
-  { href: "/badges", icon: Award, label: "Badges" },
-  { href: "/reviews", icon: MessageSquare, label: "Reviews" },
   { href: "/profile", icon: User, label: "Profile" },
-  { href: "/about", icon: Info, label: "About" },
   { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
