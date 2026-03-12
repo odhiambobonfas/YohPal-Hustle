@@ -1,16 +1,16 @@
-// ── Job Data Types ─────────────────────────────────────
-export interface JobData {
-  jobTitle: string;
-  description: string;
-  role: string;
-  startDate: string;
-  endDate: string;
-  hustlersNeeded: number;
-  location?: string;
-  status?: string;
-  createdAt?: string;
-  [key: string]: any;
-}
+// // ── Job Data Types ─────────────────────────────────────
+// export interface JobData {
+//   jobTitle: string;
+//   description: string;
+//   role: string;
+//   startDate: string;
+//   endDate: string;
+//   hustlersNeeded: number;
+//   location?: string;
+//   status?: string;
+//   createdAt?: string;
+//   [key: string]: any;
+// }
 
 // ── Fetch a Job Document by jobId ──────────────────────
 import { getFirestore, doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore";

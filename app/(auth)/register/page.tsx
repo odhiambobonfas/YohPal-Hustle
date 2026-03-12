@@ -23,7 +23,7 @@ export default function RegisterPage() {
     confirmPassword: "",
     referralCode: "",
     agreeToTerms: false,
-    location: { county: "", subCounty: "", estate: "" },
+    // location: { county: "", subCounty: "", estate: "" },
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -177,7 +177,7 @@ export default function RegisterPage() {
         username: formData.username,
         phoneNumber: formData.phoneNumber,
         referralCode: formData.referralCode,
-        location: formData.location,
+        // location: formData.location,
       });
 
       if (response.success) {
@@ -207,6 +207,7 @@ export default function RegisterPage() {
         <div className="text-center">
           <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             {t('auth.accountCreated')}
+            {t('auth.accountCreated')}
           </h2>
           <p className="text-sm text-fg-secondary mt-4">
             Your account has been successfully created.
@@ -215,6 +216,7 @@ export default function RegisterPage() {
             href="/login"
             className="inline-block mt-6 bg-brand hover:bg-brand-dark text-white font-black py-3 px-8 rounded-[10px] transition-all uppercase"
           >
+            {t('auth.goToLogin')}
             {t('auth.goToLogin')}
           </Link>
         </div>
@@ -428,6 +430,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
+          <label className="text-xs font-bold text-fg">{t('auth.phoneNumber')}</label>
           <label className="text-xs font-bold text-fg">{t('auth.phoneNumber')}</label>
           <input
             type="tel"
