@@ -2,8 +2,8 @@
 
 import { useState, useRef } from "react";
 import { ChevronLeft, CheckCircle2, Loader2, Clock, Users, Minus, Plus } from "lucide-react";
-// import { submitPostJob } from "@/services/client/hustle"; // wire up with auth token
-// import type { PostJobPayload } from "@/types/actions/hustle.types";
+import { submitPostJob } from "@/services/client/jobs";
+import type { PostJobPayload } from "@/types/actions/hustle.types";
 
 // ─── Description starters ─────────────────────────────────────────────────────
 const DESCRIPTION_SUGGESTIONS = [
@@ -41,28 +41,72 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
   const [description, setDescription] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [hustlersCount, setHustlersCount] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [hustlersCount, setHustlersCount] = useState("1");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const descRef = useRef<HTMLTextAreaElement>(null);
 
-  const duration = calcDuration(startDate, endDate);
+  const fullStart = startDate && startTime ? `${startDate}T${startTime}` : "";
+  const fullEnd = endDate && endTime ? `${endDate}T${endTime}` : "";
+  const duration = calcDuration(fullStart, fullEnd);
 
   async function handleSubmit() {
-    if (!jobTitle || !description || !startDate || !endDate) {
-      alert("Please fill in all required fields.");
+    if (!jobTitle.trim()) {
+      alert("Please enter a Job Title.");
       return;
     }
-    if (new Date(endDate) <= new Date(startDate)) {
-      alert("End date must be after start date.");
+    if (!description.trim()) {
+      alert("Please provide a Job Description.");
+      return;
+    }
+    if (!startDate || !startTime) {
+      alert("Please select both a Start Date and Time.");
+      return;
+    }
+    if (!endDate || !endTime) {
+      alert("Please select both an End Date and Time.");
+      return;
+    }
+    if (!hustlersCount || parseInt(hustlersCount) <= 0) {
+      alert("Please specify how many hustlers are needed (at least 1).");
+      return;
+    }
+    const startObj = new Date(fullStart);
+    const endObj = new Date(fullEnd);
+    if (isNaN(startObj.getTime())) {
+      alert("Invalid Start Date/Time. Please try selecting them again.");
+      return;
+    }
+    if (isNaN(endObj.getTime())) {
+      alert("Invalid End Date/Time. Please try selecting them again.");
+      return;
+    }
+    if (endObj <= startObj) {
+      alert("The End Date/Time must be after the Start Date/Time.");
       return;
     }
     setLoading(true);
     try {
-      // TODO: await submitPostJob({ jobTitle, description, role: selectedRole, startDate, endDate, hustlersNeeded: Number(hustlersCount) }, token);
-      await new Promise((r) => setTimeout(r, 900));
-      setSubmitted(true);
+      const payload: PostJobPayload = {
+        jobTitle,
+        description,
+        role: selectedRole,
+        startDate: new Date(fullStart).toISOString(),
+        endDate: new Date(fullEnd).toISOString(),
+        hustlersNeeded: Number(hustlersCount),
+      };
+      
+      const res = await submitPostJob(payload);
+      if (res.success) {
+        setSubmitted(true);
+      } else {
+        alert(res.message || "Failed to post job. Please try again.");
+      }
+    } catch (error: any) {
+      alert(error.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -198,48 +242,67 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
               <span className="w-5 h-5 rounded-full bg-brand flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">3</span>
               <label className="text-[13px] font-bold text-fg tracking-wide">Schedule</label>
             </div>
-            <div className="space-y-3">
-              {/* Start */}
-              <div className="bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-                <p className="text-[10px] font-bold text-fg-muted uppercase tracking-wide mb-1.5">
-                  📅 Start Date &amp; Time
+            <div className="space-y-4">
+              {/* Start Schedule */}
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-fg-muted uppercase tracking-wide ml-1">
+                  📅 Start Schedule
                 </p>
-                <input
-                  type="datetime-local"
-                  value={startDate}
-                  onChange={(e) => { setStartDate(e.target.value); }}
-                  className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
-                />
+                <div className="flex gap-2">
+                  <div className="flex-1 bg-surface-alt border border-rim rounded-xl px-3 py-2.5 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                    <p className="text-[9px] text-fg-muted uppercase mb-1">Date</p>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
+                    />
+                  </div>
+                  <div className="w-[110px] bg-surface-alt border border-rim rounded-xl px-3 py-2.5 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                    <p className="text-[9px] text-fg-muted uppercase mb-1">Time</p>
+                    <input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
+                    />
+                  </div>
+                </div>
               </div>
-              {!startDate && (
-                <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">Start date & time is required</p>
-              )}
 
-              {/* End */}
-              <div className="bg-surface-alt border border-rim rounded-xl px-4 py-3 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
-                <p className="text-[10px] font-bold text-fg-muted uppercase tracking-wide mb-1.5">
-                  🏁 End Date &amp; Time
+              {/* End Schedule */}
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-fg-muted uppercase tracking-wide ml-1">
+                  🏁 End Schedule
                 </p>
-                <input
-                  type="datetime-local"
-                  value={endDate}
-                  min={startDate || undefined}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
-                />
+                <div className="flex gap-2">
+                  <div className="flex-1 bg-surface-alt border border-rim rounded-xl px-3 py-2.5 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                    <p className="text-[9px] text-fg-muted uppercase mb-1">Date</p>
+                    <input
+                      type="date"
+                      value={endDate}
+                      min={startDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
+                    />
+                  </div>
+                  <div className="w-[110px] bg-surface-alt border border-rim rounded-xl px-3 py-2.5 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+                    <p className="text-[9px] text-fg-muted uppercase mb-1">Time</p>
+                    <input
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      className="w-full bg-transparent outline-none text-[14px] text-fg dark:[color-scheme:dark]"
+                    />
+                  </div>
+                </div>
               </div>
-              {!endDate && (
-                <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">End date & time is required</p>
-              )}
-              {startDate && endDate && new Date(endDate) <= new Date(startDate) && (
-                <p className="text-[11px] text-red-500 dark:text-red-400 pl-1">End must be after start</p>
-              )}
 
               {/* Duration pill */}
               {duration && (
                 <div className="flex items-center gap-2 bg-brand/5 dark:bg-brand/10 border border-brand/20 rounded-xl px-4 py-2.5">
                   <Clock size={14} className="text-brand flex-shrink-0" />
-                  <p className="text-[13px] font-semibold text-brand">Duration: {duration}</p>
+                  <p className="text-[13px] font-semibold text-brand">Total Duration: {duration}</p>
                 </div>
               )}
             </div>
