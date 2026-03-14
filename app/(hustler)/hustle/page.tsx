@@ -1,135 +1,42 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Bell,
-  MessageSquare,
-  HelpCircle,
-  Briefcase,
-  Menu,
-  X,
-} from "lucide-react";
-import HustlerProfile from "@/components/custom/app/hustler/HustlerProfile";
-import HustlerSkills from "@/components/custom/app/hustler/HustlerSkills";
-import HustlerBio from "@/components/custom/app/hustler/HustlerBio";
+import { ArrowRight, Briefcase } from "lucide-react";
 
-export default function HustlerDashboard() {
-  const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/myjobs", icon: Briefcase, label: "Jobs" },
-    { href: "/notifications", icon: Bell, label: "Notifications" },
-    { href: "/reviews", icon: MessageSquare, label: "Reviews" },
-    { href: "/help-and-support", icon: HelpCircle, label: "Support" },
-  ];
-
+export default function HustleDashboardHome() {
   return (
-    <div className="min-h-screen bg-page text-fg font-sans">
-      {/* Navigation Bar */}
-      <div className="sticky top-0 z-40 bg-surface border-b border-rim">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          {/* Logo Section */}
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2.5 hover:opacity-80 transition flex-shrink-0"
-          >
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md border border-brand/10">
-              <img
-                src="/images/logo.jpg"
-                alt="YohPal Logo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <span className="font-['Sora'] font-extrabold text-base sm:text-lg lg:text-xl tracking-tight text-fg">
-              YohPal <span className="text-brand">Hustle</span>
-            </span>
-          </Link>
-
-          {/* Desktop Navigation Links - Hidden on mobile */}
-          <div className="hidden md:flex items-center gap-2">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-black hover:text-black hover:bg-surface-alt transition font-medium text-sm"
-                >
-                  <Icon size={18} />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
+    <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-6">
+      <div className="bg-surface rounded-2xl p-6 md:p-8 border border-rim shadow-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-3 bg-brand/10 rounded-xl text-brand">
+            <Briefcase size={24} />
           </div>
-
-          {/* Mobile Hamburger Menu - Visible only on mobile */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-surface-alt rounded-lg transition"
-          >
-            {mobileMenuOpen ? (
-              <X size={24} className="text-black" />
-            ) : (
-              <Menu size={24} className="text-black" />
-            )}
-          </button>
+          <div>
+            <h1 className="text-2xl font-black text-fg tracking-tight">
+              Welcome to YohPal Hustle
+            </h1>
+            <p className="text-sm font-medium text-fg-secondary">
+              Connect, work, and grow your professional presence.
+            </p>
+          </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-rim bg-surface">
-            <div className="px-4 py-3 space-y-2">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-black hover:text-black hover:bg-surface-alt transition font-medium text-sm w-full"
-                  >
-                    <Icon size={18} />
-                    <span>{link.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-6">
-        {/* Hustler Profile Card */}
-        <HustlerProfile
-          name="Sarah Johnson"
-          location="Nairobi Central, Kenya"
-          phone="+254 700 123 456"
-          email="sarah.johnson@email.com"
-          initials="SJ"
-          isActive={true}
-        />
-
-        {/* Profile Summary */}
-        <HustlerBio
-          bio="Passionate and skilled hustler with a proven track record of delivering quality work. Committed to excellence and customer satisfaction. Available for web development, mobile apps, and UI/UX design projects."
-          onSave={(bio) => console.log("Bio saved:", bio)}
-        />
-
-        {/* Skills */}
-        <HustlerSkills
-          skills={[
-            "Web Development",
-            "Mobile Apps",
-            "UI/UX Design",
-            "Frontend",
-            "React",
-          ]}
-          onSave={(skills) => console.log("Skills saved:", skills)}
-        />
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link
+            href="/hustle/profile"
+            className="group flex flex-col justify-center p-6 bg-surface-alt rounded-xl border border-rim hover:border-brand/50 transition-all hover:shadow-md"
+          >
+            <h3 className="text-lg font-bold text-fg group-hover:text-brand transition-colors flex items-center justify-between">
+              Complete your Profile
+              <ArrowRight
+                size={18}
+                className="opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 transform"
+              />
+            </h3>
+            <p className="text-sm text-fg-secondary mt-1">
+              Set up your skills, bio, and contact information to attract the
+              best opportunities.
+            </p>
+          </Link>
+        </div>
       </div>
     </div>
   );
