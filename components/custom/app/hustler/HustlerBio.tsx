@@ -33,14 +33,16 @@ export default function HustlerBio({
         <h3 className="text-base md:text-lg font-bold text-black mb-2 md:mb-3">
           Profile Summary
         </h3>
-        <p className="text-black leading-relaxed text-sm">{editBio}</p>
+        <p className="text-black leading-relaxed text-sm pr-12 pb-2">
+          {editBio}
+        </p>
 
         {/* Edit Button */}
         <button
           onClick={() => setIsEditOpen(true)}
-          className="absolute bottom-3 md:bottom-4 right-3 md:right-4 w-9 md:w-10 h-9 md:h-10 rounded-full bg-brand text-white shadow-lg hover:opacity-90 transition flex items-center justify-center border-2 border-surface"
+          className="absolute bottom-3 right-3 md:bottom-4 md:right-4 w-10 h-10 rounded-full bg-surface border-brand text-brand shadow-lg hover:bg-surface-alt transition flex items-center justify-center border-2 z-10"
         >
-          <Edit2 size={16} />
+          <Edit2 size={18} />
         </button>
       </div>
 
