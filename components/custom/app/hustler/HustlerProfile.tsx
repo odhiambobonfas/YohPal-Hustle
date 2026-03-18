@@ -17,33 +17,22 @@ import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { sendEmailUpdateVerification } from "@/services/client/email-verification";
 import { normalizePhoneNumber } from "@/utilities/normalize-phone";
 import { getAuth } from "firebase/auth";
+import { UpdateProfile } from "@/types/users";
+import { CurrentUserState } from "@/hooks/useCurrentUser";
 
 interface HustlerProfileProps {
-  name?: string;
-  location?: string;
-  phone?: string;
-  email?: string;
-  avatar?: string;
-  initials?: string;
-  isActive?: boolean;
-  onSave?: (data: { avatar?: string; phone: string; email: string }) => void;
+  profileData : CurrentUserState ;
+
 }
 
-export default function HustlerProfile({
-  name = "John Doe",
-  location = "Nairobi Central",
-  phone = "+254 700 000 000",
-  email = "john@example.com",
-  avatar,
-  initials = "JD",
-  isActive = true,
-  onSave,
-}: HustlerProfileProps) {
+export default function HustlerProfile(
+  {profileData}: HustlerProfileProps
+) {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editPhone, setEditPhone] = useState(phone);
-  const [editEmail, setEditEmail] = useState(email);
-  const [editAvatar, setEditAvatar] = useState(avatar);
-  const [previewAvatar, setPreviewAvatar] = useState(avatar);
+  const [editPhone, setEditPhone] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editAvatar, setEditAvatar] = useState("");
+  const [previewAvatar, setPreviewAvatar] = useState("");
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneChanged, setPhoneChanged] = useState(false);
@@ -56,6 +45,10 @@ export default function HustlerProfile({
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Placeholders
+  const location = "Nairobi Kenya";
+  const isActive = true;
 
   // Timer for OTP resend
   useEffect(() => {
@@ -209,21 +202,24 @@ export default function HustlerProfile({
 
   const handleSave = () => {
     if (!isSaveAllowed()) return;
-    if (onSave) {
-      onSave({
-        avatar: editAvatar,
-        phone: editPhone,
-        email: editEmail,
-      });
-    }
+    // This takes the updated data
+    // const updatedProfileData: UpdateProfile = {
+    //   phone: editPhone,
+    //   email: editEmail,
+    //   // location: editLocation,
+    //   // avatar: editAvatar,
+    // }
+    // profileData(updatedProfileData)
     setIsEditOpen(false);
   };
 
+  // Get the current user and use the current data
+
   const handleClose = () => {
     setIsEditOpen(false);
-    setEditPhone(phone);
-    setEditEmail(email);
-    setPreviewAvatar(avatar);
+    setEditPhone(editPhone);
+    setEditEmail(editEmail);
+    setPreviewAvatar(editAvatar);
     setPhoneVerified(false);
     setEmailVerified(false);
     setPhoneChanged(false);
@@ -245,7 +241,7 @@ export default function HustlerProfile({
               {previewAvatar ? (
                 <Image
                   src={previewAvatar}
-                  alt={name}
+                  alt={profileData.displayName}
                   width={96}
                   height={96}
                   className="w-full h-full object-cover"
@@ -253,7 +249,7 @@ export default function HustlerProfile({
                 />
               ) : (
                 <span className="text-xl md:text-2xl font-bold text-brand">
-                  {initials}
+                  {profileData.initials}
                 </span>
               )}
             </div>
@@ -270,7 +266,7 @@ export default function HustlerProfile({
           <div className="flex-1 min-w-0 text-center md:text-left">
             {/* Name */}
             <h2 className="text-xl md:text-2xl font-bold text-black mb-3 md:mb-4">
-              {name}
+              {profileData.displayName}
             </h2>
 
             {/* Contact Details */}
@@ -339,7 +335,7 @@ export default function HustlerProfile({
                     />
                   ) : (
                     <span className="text-xl font-bold text-brand">
-                      {initials}
+                      {profileData.initials}
                     </span>
                   )}
                 </div>

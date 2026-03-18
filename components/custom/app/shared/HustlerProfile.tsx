@@ -42,7 +42,7 @@ const HustlerProfile: React.FC<HustlerProfileProps> = ({
 }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"dashboard" | "editProfile">(
-    "dashboard"
+    "dashboard",
   );
   const [clientMode, setHustlerMode] = useState(hustlerModeEnabled);
 

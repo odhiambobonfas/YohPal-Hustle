@@ -3,8 +3,20 @@
 import HustlerProfile from "@/components/custom/app/hustler/HustlerProfile";
 import HustlerSkills from "@/components/custom/app/hustler/HustlerSkills";
 import HustlerBio from "@/components/custom/app/hustler/HustlerBio";
+import { UpdateProfile } from "@/types/users";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+
 
 export default function HustlerProfilePage() {
+  // Get the current user and pass the data as props to the Hustler Profile Component
+  const currentUser = useCurrentUser();
+  
+  // This returns the updated profile data from the HustlerProfile component
+  // const profileData = (data: UpdateProfile) => {
+  //   return {
+  //    data
+  //   };
+  // } 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-6">
       <div className="mb-2 md:mb-6">
@@ -19,12 +31,7 @@ export default function HustlerProfilePage() {
 
       {/* Hustler Profile Card */}
       <HustlerProfile
-        name="Sarah Johnson"
-        location="Nairobi Central, Kenya"
-        phone="+254 700 123 456"
-        email="sarah.johnson@email.com"
-        initials="SJ"
-        isActive={true}
+        profileData={currentUser}
       />
 
       {/* Profile Summary */}
