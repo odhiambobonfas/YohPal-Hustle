@@ -17,7 +17,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/myjobs", icon: Briefcase, label: "My Jobs" },
   { href: "/notifications", icon: Bell, label: "Notifications" },
-  { href: "/hustle/profile", icon: User, label: "Profile" },
+  { href: "/profile", icon: User, label: "Profile" },
   { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
