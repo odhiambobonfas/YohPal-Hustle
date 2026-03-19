@@ -17,17 +17,17 @@ import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { sendEmailUpdateVerification } from "@/services/client/email-verification";
 import { normalizePhoneNumber } from "@/utilities/normalize-phone";
 import { getAuth } from "firebase/auth";
-import { UpdateProfile } from "@/types/users";
 import { CurrentUserState } from "@/hooks/useCurrentUser";
+import { deriveDisplayName, deriveInitials } from "@/utilities/profile";
+import { HustlerProfileData } from "@/types/users";
 
 interface HustlerProfileProps {
-  profileData : CurrentUserState ;
-
+  hustlerProfile: HustlerProfileData;
 }
 
-export default function HustlerProfile(
-  {profileData}: HustlerProfileProps
-) {
+export default function HustlerProfile({
+  hustlerProfile,
+}: HustlerProfileProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editPhone, setEditPhone] = useState("");
   const [editEmail, setEditEmail] = useState("");
@@ -46,6 +46,14 @@ export default function HustlerProfile(
   const [otpTimer, setOtpTimer] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const initials = deriveInitials(
+    hustlerProfile.firstName,
+    hustlerProfile.lastName
+  );
+  const displayName = deriveDisplayName(
+    hustlerProfile.firstName,
+    hustlerProfile.lastName
+  );
   // Placeholders
   const location = "Nairobi Kenya";
   const isActive = true;
@@ -138,7 +146,7 @@ export default function HustlerProfile(
       if (result.success) {
         setEmailVerificationSent(true);
         alert(
-          "Verification email sent! Please check your inbox and click the link, then click 'Confirm Verification'.",
+          "Verification email sent! Please check your inbox and click the link, then click 'Confirm Verification'."
         );
       } else {
         alert(result.message || "Failed to send email verification.");
@@ -170,7 +178,7 @@ export default function HustlerProfile(
         setEmailVerificationSent(false);
       } else {
         alert(
-          "Email not verified yet. Please click the link in the email we sent you, then try again.",
+          "Email not verified yet. Please click the link in the email we sent you, then try again."
         );
       }
     } catch (error) {
@@ -241,7 +249,7 @@ export default function HustlerProfile(
               {previewAvatar ? (
                 <Image
                   src={previewAvatar}
-                  alt={profileData.displayName}
+                  alt={hustlerProfile.firstName}
                   width={96}
                   height={96}
                   className="w-full h-full object-cover"
@@ -249,7 +257,7 @@ export default function HustlerProfile(
                 />
               ) : (
                 <span className="text-xl md:text-2xl font-bold text-brand">
-                  {profileData.initials}
+                  {initials}
                 </span>
               )}
             </div>
@@ -266,7 +274,7 @@ export default function HustlerProfile(
           <div className="flex-1 min-w-0 text-center md:text-left">
             {/* Name */}
             <h2 className="text-xl md:text-2xl font-bold text-black mb-3 md:mb-4">
-              {profileData.displayName}
+              {displayName}
             </h2>
 
             {/* Contact Details */}
@@ -335,7 +343,7 @@ export default function HustlerProfile(
                     />
                   ) : (
                     <span className="text-xl font-bold text-brand">
-                      {profileData.initials}
+                      {initials}
                     </span>
                   )}
                 </div>
@@ -370,8 +378,8 @@ export default function HustlerProfile(
                       phoneChanged && !phoneVerified
                         ? "border-red-500/50 focus:ring-2 focus:ring-red-500/50"
                         : phoneVerified
-                          ? "border-green-500/50 focus:ring-2 focus:ring-green-500/50"
-                          : "border-rim focus:ring-2 focus:ring-brand/50"
+                        ? "border-green-500/50 focus:ring-2 focus:ring-green-500/50"
+                        : "border-rim focus:ring-2 focus:ring-brand/50"
                     }`}
                     placeholder="+254 700 000 000"
                   />
@@ -383,8 +391,8 @@ export default function HustlerProfile(
                         phoneVerified
                           ? "bg-green-500/20 text-green-600 border border-green-500/30"
                           : phoneChanged
-                            ? "bg-brand text-white hover:opacity-90"
-                            : "bg-gray-300/30 text-gray-500 cursor-not-allowed"
+                          ? "bg-brand text-white hover:opacity-90"
+                          : "bg-gray-300/30 text-gray-500 cursor-not-allowed"
                       }`}
                     >
                       {phoneVerified ? (
@@ -479,8 +487,8 @@ export default function HustlerProfile(
                       emailChanged && !emailVerified
                         ? "border-red-500/50 focus:ring-2 focus:ring-red-500/50"
                         : emailVerified
-                          ? "border-green-500/50 focus:ring-2 focus:ring-green-500/50"
-                          : "border-rim focus:ring-2 focus:ring-brand/50"
+                        ? "border-green-500/50 focus:ring-2 focus:ring-green-500/50"
+                        : "border-rim focus:ring-2 focus:ring-brand/50"
                     }`}
                     placeholder="john@example.com"
                   />
@@ -495,10 +503,10 @@ export default function HustlerProfile(
                       emailVerified
                         ? "bg-green-500/20 text-green-600 border border-green-500/30"
                         : emailVerificationSent
-                          ? "bg-blue-600 text-white hover:bg-blue-700"
-                          : emailChanged
-                            ? "bg-brand text-white hover:opacity-90"
-                            : "bg-gray-300/30 text-gray-500 cursor-not-allowed"
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : emailChanged
+                        ? "bg-brand text-white hover:opacity-90"
+                        : "bg-gray-300/30 text-gray-500 cursor-not-allowed"
                     }`}
                   >
                     {emailVerified ? (
@@ -508,8 +516,8 @@ export default function HustlerProfile(
                         {emailVerifyLoading
                           ? "Checking..."
                           : emailVerificationSent
-                            ? "Confirm"
-                            : "Verify"}
+                          ? "Confirm"
+                          : "Verify"}
                       </span>
                     )}
                   </button>
