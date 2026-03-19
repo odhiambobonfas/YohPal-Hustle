@@ -7,6 +7,7 @@ import { completeUserRegistration } from "@/services/client/auth";
 import { createUserAndSendVerification } from "@/services/client/email-verification";
 import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { getAuth } from "firebase/auth";
+import { normalizePhoneNumber } from "@/utilities/normalize-phone";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -40,32 +41,6 @@ export default function RegisterPage() {
     }));
   };
 
-  const normalizePhoneNumber = (phone: string): string => {
-    console.log("Normalizing phone number:", phone);
-    // Remove all spaces, dashes, and parentheses
-    let normalized = phone.replace(/[\s\-()]/g, "");
-    
-    console.log("Input phone:", phone, "After cleanup:", normalized);
-    
-    // If starts with 0, replace with +254
-    if (normalized.startsWith("0")) {
-      normalized = "+254" + normalized.substring(1);
-    }
-    // If starts with 254 (without +), add +
-    else if (normalized.startsWith("254") && !normalized.startsWith("+")) {
-      normalized = "+" + normalized;
-    }
-    // If doesn't start with + or 0 or 254, assume it's missing country code
-    else if (!normalized.startsWith("+") && !normalized.startsWith("254")) {
-      normalized = "+254" + normalized;
-    }
-    
-    // Validate E.164 format: +254XXXXXXXXX (should be 13 characters total)
-    console.log("Normalized phone:", normalized, "Length:", normalized.length);
-    
-    return normalized;
-  };
-
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -74,14 +49,16 @@ export default function RegisterPage() {
     try {
       const normalizedPhone = normalizePhoneNumber(formData.phoneNumber);
       setFormData((prev) => ({ ...prev, phoneNumber: normalizedPhone }));
-      
+
       const phoneResult = await sendPhoneOTP(normalizedPhone);
-      
+
       if (phoneResult.success && phoneResult.otp) {
         setExpectedOtp(phoneResult.otp);
         setShowPhoneVerification(true);
       } else {
-        setError(phoneResult.message || "Failed to send phone verification code.");
+        setError(
+          phoneResult.message || "Failed to send phone verification code.",
+        );
       }
     } catch (err: any) {
       console.error("Verification error:", err);
@@ -108,8 +85,11 @@ export default function RegisterPage() {
       }
 
       // Verify phone code
-      const phoneVerifyResult = await verifyPhoneOTP(expectedOtp, phoneVerificationCode);
-      
+      const phoneVerifyResult = await verifyPhoneOTP(
+        expectedOtp,
+        phoneVerificationCode,
+      );
+
       if (!phoneVerifyResult.success) {
         setError(phoneVerifyResult.message);
         setIsLoading(false);
@@ -131,8 +111,11 @@ export default function RegisterPage() {
     setIsLoading(true);
     try {
       // Step 2: Create Auth user and send email verification
-      const result = await createUserAndSendVerification(formData.email, formData.password);
-      
+      const result = await createUserAndSendVerification(
+        formData.email,
+        formData.password,
+      );
+
       if (!result.success || !result.tempUser) {
         setError(result.message || "Failed to create account.");
         setIsLoading(false);
@@ -142,9 +125,11 @@ export default function RegisterPage() {
       // Wait for user to verify email
       setError(null);
       setIsLoading(false);
-      
+
       // Show message to check email
-      alert("Please check your email and click the verification link. Then click 'Complete Registration' below.");
+      alert(
+        "Please check your email and click the verification link. Then click 'Complete Registration' below.",
+      );
     } catch (err: any) {
       console.error("Email verification error:", err);
       if (err.code === "auth/email-already-in-use") {
@@ -163,7 +148,7 @@ export default function RegisterPage() {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      
+
       if (!user) {
         setError("Session expired. Please start registration again.");
         setIsLoading(false);
@@ -173,7 +158,9 @@ export default function RegisterPage() {
       // Check if email is verified
       await user.reload();
       if (!user.emailVerified) {
-        setError("Please verify your email first. Check your inbox for the verification link.");
+        setError(
+          "Please verify your email first. Check your inbox for the verification link.",
+        );
         setIsLoading(false);
         return;
       }
@@ -187,7 +174,7 @@ export default function RegisterPage() {
         phoneNumber: formData.phoneNumber,
         referralCode: formData.referralCode,
       });
-      
+
       if (response.success) {
         setIsSubmitted(true);
       } else {
@@ -216,7 +203,9 @@ export default function RegisterPage() {
           <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             Account Created!
           </h2>
-          <p className="text-sm text-fg-secondary mt-4">Your account has been successfully created.</p>
+          <p className="text-sm text-fg-secondary mt-4">
+            Your account has been successfully created.
+          </p>
           <Link
             href="/login"
             className="inline-block mt-6 bg-brand hover:bg-brand-dark text-white font-black py-3 px-8 rounded-[10px] transition-all uppercase"
@@ -236,12 +225,13 @@ export default function RegisterPage() {
             Verify Your Phone Number
           </h2>
           <p className="text-sm text-fg-secondary mt-2">
-            We've sent a verification code to <strong className="text-fg">{formData.phoneNumber}</strong>
+            We've sent a verification code to{" "}
+            <strong className="text-fg">{formData.phoneNumber}</strong>
           </p>
         </div>
         {error && (
-          <div className="bg-red-50 dark:bg-red-950/50 border-l-4 border-red-500 p-4 rounded-md">
-            <p className="text-sm text-red-700 dark:text-red-400 font-bold">{error}</p>
+          <div className="bg-brand-50 dark:bg-brand-900/10 border-l-4 border-brand p-4 rounded-md">
+            <p className="text-sm text-brand font-bold">{error}</p>
           </div>
         )}
         <div className="bg-blue-50 dark:bg-blue-950/50 border-l-4 border-blue-500 p-6 rounded-md">
@@ -292,7 +282,8 @@ export default function RegisterPage() {
             Verify Your Email
           </h2>
           <p className="text-sm text-fg-secondary mt-2">
-            Almost done! Now verify your email: <strong className="text-fg">{formData.email}</strong>
+            Almost done! Now verify your email:{" "}
+            <strong className="text-fg">{formData.email}</strong>
           </p>
         </div>
         {error && (
@@ -365,7 +356,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-     );
+    );
   }
 
   return (
