@@ -1,14 +1,13 @@
-export interface Profile {
-    userName : string
-    intials : string
-    location : string
-    email : string
-    phone : string
-    avatar : File
-}
+export interface HustlerProfileData {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+      referralCode: string;
+  }
 
-export interface UpdateProfile {
-    // location : string
-    email : string
-    phone : string
-}
+  // This is the envelope of the API  response on /hustler/profile/:uid
+  export interface ProfileResponse {
+    message: string;
+    profile: HustlerProfileData; 
+  }
