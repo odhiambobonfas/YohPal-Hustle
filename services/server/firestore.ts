@@ -13,6 +13,7 @@ export interface JobData {
 }
 
 // ── Fetch a Job Document by jobId ──────────────────────
+import { getFirestore, doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
 export async function getJobDocument(
   jobId: string
 ): Promise<{ success: boolean; data: JobData | null; message?: string }> {

@@ -7,8 +7,11 @@ import { completeUserRegistration } from "@/services/client/auth";
 import { createUserAndSendVerification } from "@/services/client/email-verification";
 import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { getAuth } from "firebase/auth";
+import LocationSelector from "@/components/custom/app/shared/LocationSelector";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 export default function RegisterPage() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,6 +22,7 @@ export default function RegisterPage() {
     confirmPassword: "",
     referralCode: "",
     agreeToTerms: false,
+    location: { county: "", subCounty: "", estate: "" },
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -40,32 +44,6 @@ export default function RegisterPage() {
     }));
   };
 
-  const normalizePhoneNumber = (phone: string): string => {
-    console.log("Normalizing phone number:", phone);
-    // Remove all spaces, dashes, and parentheses
-    let normalized = phone.replace(/[\s\-()]/g, "");
-    
-    console.log("Input phone:", phone, "After cleanup:", normalized);
-    
-    // If starts with 0, replace with +254
-    if (normalized.startsWith("0")) {
-      normalized = "+254" + normalized.substring(1);
-    }
-    // If starts with 254 (without +), add +
-    else if (normalized.startsWith("254") && !normalized.startsWith("+")) {
-      normalized = "+" + normalized;
-    }
-    // If doesn't start with + or 0 or 254, assume it's missing country code
-    else if (!normalized.startsWith("+") && !normalized.startsWith("254")) {
-      normalized = "+254" + normalized;
-    }
-    
-    // Validate E.164 format: +254XXXXXXXXX (should be 13 characters total)
-    console.log("Normalized phone:", normalized, "Length:", normalized.length);
-    
-    return normalized;
-  };
-
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -74,14 +52,16 @@ export default function RegisterPage() {
     try {
       const normalizedPhone = normalizePhoneNumber(formData.phoneNumber);
       setFormData((prev) => ({ ...prev, phoneNumber: normalizedPhone }));
-      
+
       const phoneResult = await sendPhoneOTP(normalizedPhone);
-      
+
       if (phoneResult.success && phoneResult.otp) {
         setExpectedOtp(phoneResult.otp);
         setShowPhoneVerification(true);
       } else {
-        setError(phoneResult.message || "Failed to send phone verification code.");
+        setError(
+          phoneResult.message || "Failed to send phone verification code.",
+        );
       }
     } catch (err: any) {
       console.error("Verification error:", err);
@@ -108,8 +88,11 @@ export default function RegisterPage() {
       }
 
       // Verify phone code
-      const phoneVerifyResult = await verifyPhoneOTP(expectedOtp, phoneVerificationCode);
-      
+      const phoneVerifyResult = await verifyPhoneOTP(
+        expectedOtp,
+        phoneVerificationCode,
+      );
+
       if (!phoneVerifyResult.success) {
         setError(phoneVerifyResult.message);
         setIsLoading(false);
@@ -131,8 +114,11 @@ export default function RegisterPage() {
     setIsLoading(true);
     try {
       // Step 2: Create Auth user and send email verification
-      const result = await createUserAndSendVerification(formData.email, formData.password);
-      
+      const result = await createUserAndSendVerification(
+        formData.email,
+        formData.password,
+      );
+
       if (!result.success || !result.tempUser) {
         setError(result.message || "Failed to create account.");
         setIsLoading(false);
@@ -142,9 +128,11 @@ export default function RegisterPage() {
       // Wait for user to verify email
       setError(null);
       setIsLoading(false);
-      
+
       // Show message to check email
-      alert("Please check your email and click the verification link. Then click 'Complete Registration' below.");
+      alert(
+        "Please check your email and click the verification link. Then click 'Complete Registration' below.",
+      );
     } catch (err: any) {
       console.error("Email verification error:", err);
       if (err.code === "auth/email-already-in-use") {
@@ -163,7 +151,7 @@ export default function RegisterPage() {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      
+
       if (!user) {
         setError("Session expired. Please start registration again.");
         setIsLoading(false);
@@ -173,7 +161,9 @@ export default function RegisterPage() {
       // Check if email is verified
       await user.reload();
       if (!user.emailVerified) {
-        setError("Please verify your email first. Check your inbox for the verification link.");
+        setError(
+          "Please verify your email first. Check your inbox for the verification link.",
+        );
         setIsLoading(false);
         return;
       }
@@ -186,8 +176,9 @@ export default function RegisterPage() {
         username: formData.username,
         phoneNumber: formData.phoneNumber,
         referralCode: formData.referralCode,
+        location: formData.location,
       });
-      
+
       if (response.success) {
         setIsSubmitted(true);
       } else {
@@ -214,14 +205,17 @@ export default function RegisterPage() {
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
-            Account Created!
+            {t('auth.accountCreated')}
           </h2>
-          <p className="text-sm text-fg-secondary mt-4">Your account has been successfully created.</p>
+          <p className="text-sm text-fg-secondary mt-4">{t('auth.accountCreatedMessage')}</p>
+          <p className="text-sm text-fg-secondary mt-4">
+            Your account has been successfully created.
+          </p>
           <Link
             href="/login"
             className="inline-block mt-6 bg-brand hover:bg-brand-dark text-white font-black py-3 px-8 rounded-[10px] transition-all uppercase"
           >
-            Go to Login
+            {t('auth.goToLogin')}
           </Link>
         </div>
       </div>
@@ -236,7 +230,8 @@ export default function RegisterPage() {
             Verify Your Phone Number
           </h2>
           <p className="text-sm text-fg-secondary mt-2">
-            We've sent a verification code to <strong className="text-fg">{formData.phoneNumber}</strong>
+            We've sent a verification code to{" "}
+            <strong className="text-fg">{formData.phoneNumber}</strong>
           </p>
         </div>
         {error && (
@@ -292,7 +287,8 @@ export default function RegisterPage() {
             Verify Your Email
           </h2>
           <p className="text-sm text-fg-secondary mt-2">
-            Almost done! Now verify your email: <strong className="text-fg">{formData.email}</strong>
+            Almost done! Now verify your email:{" "}
+            <strong className="text-fg">{formData.email}</strong>
           </p>
         </div>
         {error && (
@@ -365,7 +361,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-     );
+    );
   }
 
   return (
@@ -432,16 +428,25 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-bold text-fg">Phone number</label>
+          <label className="text-xs font-bold text-fg">{t('auth.phoneNumber')}</label>
           <input
             type="tel"
             name="phoneNumber"
-            placeholder="+1234567890"
+            placeholder="+254712345678"
             className="w-full bg-surface border border-brand-300 dark:border-brand-700 rounded-[10px] px-4 py-3 text-fg placeholder-fg-muted focus:outline-none focus:ring-0 focus:border-brand transition-colors"
             required
             onChange={handleChange}
           />
         </div>
+
+        {/* Location Selector */}
+        <LocationSelector
+          value={formData.location}
+          onChange={(location) => setFormData((prev) => ({ ...prev, location }))}
+          required={true}
+          showEstate={true}
+          autoDetect={true}
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">

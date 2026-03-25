@@ -6,26 +6,45 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import { useLocationCity } from "@/hooks/useLocationCity";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 const PAGE_TITLES: Record<string, string> = {
-  "/dashboard":        "Dashboard",
-  "/myjobs":           "My Jobs",
-  "/notifications":    "Notifications",
-  "/workhistory":      "Work History",
-  "/badges":           "Badges",
-  "/reviews":          "Reviews",
-  "/edit-profile":     "Edit Profile",
-  "/about":            "About",
+  "/dashboard": "Dashboard",
+  "/myjobs": "My Jobs",
+  "/notifications": "Notifications",
+  "/workhistory": "Work History",
+  "/badges": "Badges",
+  "/reviews": "Reviews",
+  "/edit-profile": "Edit Profile",
   "/help-and-support": "Help & Support",
-  "/settings":         "Settings",
+  "/settings": "Settings",
 };
 
-export default function ShellLayout({ children }: { children: React.ReactNode }) {
+export default function ShellLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const title = PAGE_TITLES[pathname] ?? "YohPal Hustle";
   const { city, loading: locationLoading } = useLocationCity();
   const { initials, displayName, photoURL } = useCurrentUser();
+  const { t } = useLanguage();
+
+  const PAGE_TITLES: Record<string, string> = {
+    "/dashboard":        t('nav.dashboard'),
+    "/myjobs":           t('nav.myJobs'),
+    "/notifications":    t('nav.notifications'),
+    "/workhistory":      t('nav.workHistory'),
+    "/badges":           t('nav.badges'),
+    "/reviews":          t('nav.reviews'),
+    "/edit-profile":     t('nav.editProfile'),
+    "/about":            t('nav.about'),
+    "/help-and-support": t('nav.helpAndSupport'),
+    "/settings":         t('nav.settings'),
+  };
+
+  const title = PAGE_TITLES[pathname] ?? "YohPal Hustle";
 
   return (
     <div className="min-h-screen bg-page">
@@ -53,9 +72,7 @@ export default function ShellLayout({ children }: { children: React.ReactNode })
 
         {/* Page content — centred & max-width capped for large screens */}
         <main className="flex-1 overflow-x-hidden">
-          <div className="w-full max-w-5xl mx-auto">
-            {children}
-          </div>
+          <div className="w-full max-w-5xl mx-auto">{children}</div>
         </main>
       </div>
     </div>
