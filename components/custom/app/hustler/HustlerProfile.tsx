@@ -29,8 +29,8 @@ export default function HustlerProfile({
   hustlerProfile,
 }: HustlerProfileProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editPhone, setEditPhone] = useState("");
-  const [editEmail, setEditEmail] = useState("");
+  const [editPhone, setEditPhone] = useState(hustlerProfile.phoneNumber);
+  const [editEmail, setEditEmail] = useState(hustlerProfile.email);
   const [editAvatar, setEditAvatar] = useState("");
   const [previewAvatar, setPreviewAvatar] = useState("");
   const [phoneVerified, setPhoneVerified] = useState(false);
