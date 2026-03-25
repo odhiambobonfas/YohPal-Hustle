@@ -14,6 +14,24 @@ export interface JobData {
 
 // ── Fetch a Job Document by jobId ──────────────────────
 import { getFirestore, doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
+export async function getJobDocument(
+  jobId: string
+): Promise<{ success: boolean; data: JobData | null; message?: string }> {
+  try {
+    const snapshot = await getDoc(doc(db, "jobs", jobId));
+    if (!snapshot.exists()) {
+      return { success: false, data: null, message: "Job not found" };
+    }
+    return { success: true, data: snapshot.data() as JobData };
+  } catch (error: any) {
+    return {
+      success: false,
+      data: null,
+      message: error.message || "Failed to fetch job",
+    };
+  }
+}
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import firebaseApp from "./firebase";
 
 const db = getFirestore(firebaseApp);
