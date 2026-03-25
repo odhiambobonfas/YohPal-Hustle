@@ -28,6 +28,8 @@ export default function HustlerProfilePage() {
     }
   }, [uid]);
 
+  console.log("This is the data form profile/hustle", hustlerProfile);
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-6">
       <div className="mb-2 md:mb-6">
@@ -42,9 +44,7 @@ export default function HustlerProfilePage() {
 
       {/* 2. FIX: The Type Guard. 
           TypeScript now knows hustlerProfile is NOT null inside this block. */}
-      {hustlerProfile && (
-        <>
-          <HustlerProfile hustlerProfile={hustlerProfile} />
+          {hustlerProfile && <HustlerProfile hustlerProfile={hustlerProfile} />}
 
           <HustlerBio
             bio="Passionate and skilled hustler with a proven track record of delivering quality work. Committed to excellence and customer satisfaction. Available for web development, mobile apps, and UI/UX design projects."
@@ -61,8 +61,6 @@ export default function HustlerProfilePage() {
             ]}
             onSave={(skills) => console.log("Skills saved:", skills)}
           />
-        </>
-      )}
 
       {/* 3. Handle the case where UID exists but no profile was found */}
       {!hustlerProfile && !isLoading && (
