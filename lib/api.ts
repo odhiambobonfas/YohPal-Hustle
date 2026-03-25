@@ -7,6 +7,9 @@
  * ─────────────────────────────────────────────────────────
  */
 
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { ProfileResponse } from "@/types/users";
+
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://yohpal-hustler-apis-test.onrender.com";
@@ -75,4 +78,13 @@ export async function apiFetchForm<T>(
   }
 
   return response.json() as Promise<T>;
+}
+
+// Using the endpoints from the YohpalHustleApis
+
+export function getUserProfile(uid: string): Promise<ProfileResponse> {
+  console.log("Fetching profile for UID:", uid);
+  return apiFetch<ProfileResponse>(`/hustler/profile/${uid}`, {
+    method: "GET",
+  });
 }

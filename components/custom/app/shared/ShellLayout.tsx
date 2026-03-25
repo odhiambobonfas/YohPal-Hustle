@@ -8,7 +8,23 @@ import { useLocationCity } from "@/hooks/useLocationCity";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useLanguage } from "@/providers/LanguageProvider";
 
-export default function ShellLayout({ children }: { children: React.ReactNode }) {
+const PAGE_TITLES: Record<string, string> = {
+  "/dashboard": "Dashboard",
+  "/myjobs": "My Jobs",
+  "/notifications": "Notifications",
+  "/workhistory": "Work History",
+  "/badges": "Badges",
+  "/reviews": "Reviews",
+  "/edit-profile": "Edit Profile",
+  "/help-and-support": "Help & Support",
+  "/settings": "Settings",
+};
+
+export default function ShellLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const { city, loading: locationLoading } = useLocationCity();
@@ -56,9 +72,7 @@ export default function ShellLayout({ children }: { children: React.ReactNode })
 
         {/* Page content — centred & max-width capped for large screens */}
         <main className="flex-1 overflow-x-hidden">
-          <div className="w-full max-w-5xl mx-auto">
-            {children}
-          </div>
+          <div className="w-full max-w-5xl mx-auto">{children}</div>
         </main>
       </div>
     </div>

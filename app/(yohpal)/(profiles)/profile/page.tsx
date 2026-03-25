@@ -9,6 +9,9 @@ import { Loader2 } from "lucide-react";
 export default function ProfilePage() {
   const router = useRouter();
   const { user, profile, initials, displayName, loading } = useCurrentUser();
+  // DEBUG
+  console.log("This is the user", user);
+
   const { city } = useLocationCity();
 
   if (loading) {

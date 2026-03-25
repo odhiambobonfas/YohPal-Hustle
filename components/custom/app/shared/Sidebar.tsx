@@ -7,16 +7,21 @@ import {
   X,
   LayoutDashboard,
   Briefcase,
-  History,
-  Award,
-  MessageSquare,
   Bell,
   Settings,
   User,
-  Info,
   HelpCircle,
 } from "lucide-react";
 import { useLanguage } from "@/providers/LanguageProvider";
+
+const navItems = [
+  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/myjobs", icon: Briefcase, label: "My Jobs" },
+  { href: "/notifications", icon: Bell, label: "Notifications" },
+  { href: "/profile", icon: User, label: "Profile" },
+  { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
+  { href: "/settings", icon: Settings, label: "Settings" },
+];
 
 interface SidebarProps {
   isOpen?: boolean;

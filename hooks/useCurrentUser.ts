@@ -19,6 +19,8 @@ import { useState, useEffect } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "@/services/server/firebase";
 import { getUserDocument, type UserData } from "@/services/server/firestore";
+import { deriveInitials } from "@/utilities/profile";
+import { deriveDisplayName } from "@/utilities/profile";
 
 export interface CurrentUserState {
   user: User | null;
@@ -27,34 +29,6 @@ export interface CurrentUserState {
   displayName: string;
   photoURL: string | null;
   loading: boolean;
-}
-
-function deriveInitials(profile: UserData | null, user: User | null): string {
-  if (profile?.firstName && profile?.lastName) {
-    return `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
-  }
-  if (profile?.firstName) {
-    return profile.firstName.slice(0, 2).toUpperCase();
-  }
-  if (user?.displayName) {
-    const parts = user.displayName.trim().split(" ");
-    return parts.length >= 2
-      ? `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
-      : parts[0].slice(0, 2).toUpperCase();
-  }
-  if (user?.email) {
-    return user.email.slice(0, 2).toUpperCase();
-  }
-  return "YH";
-}
-
-function deriveDisplayName(profile: UserData | null, user: User | null): string {
-  if (profile?.firstName || profile?.lastName) {
-    return `${profile?.firstName ?? ""} ${profile?.lastName ?? ""}`.trim();
-  }
-  if (user?.displayName) return user.displayName;
-  if (user?.email)       return user.email.split("@")[0];
-  return "Hustler";
 }
 
 export function useCurrentUser(): CurrentUserState {
@@ -91,8 +65,8 @@ export function useCurrentUser(): CurrentUserState {
   return {
     user,
     profile,
-    initials:    deriveInitials(profile, user),
-    displayName: deriveDisplayName(profile, user),
+    initials:    deriveInitials(profile?.firstName, profile?.lastName),
+    displayName: deriveDisplayName(profile?.firstName, profile?.lastName),
     photoURL,
     loading,
   };
