@@ -17,12 +17,12 @@
 // import { getJobDocument } from "@/services/server/firestore";
 // import { getJobLocation } from "@/services/server/view-map";
 
-// interface PageProps {
-//   params: Promise<{ jobId: string }>;
-// }
+interface PageProps {
+  params: Promise<{ jobId: string }>;
+}
 
-// export default async function JobDetailsPage({ params }: PageProps) {
-//   const { jobId } = await params;
+export default async function JobDetailsPage({ params }: PageProps) {
+  const { jobId } = await params;
 
 //   const [jobResult, locationResult] = await Promise.all([
 //     getJobDocument(jobId),
@@ -60,4 +60,4 @@
 //     location: locationResult.data ?? null,
 //   };
 //   return <JobDetails job={jobDetail} />;
-// }
+}
