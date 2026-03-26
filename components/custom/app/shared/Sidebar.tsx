@@ -12,6 +12,7 @@ import {
   User,
   HelpCircle,
 } from "lucide-react";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },

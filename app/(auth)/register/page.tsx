@@ -7,7 +7,6 @@ import { completeUserRegistration } from "@/services/client/auth";
 import { createUserAndSendVerification } from "@/services/client/email-verification";
 import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { getAuth } from "firebase/auth";
-import { normalizePhoneNumber } from "@/utilities/normalize-phone";
 import LocationSelector from "@/components/custom/app/shared/LocationSelector";
 import { useLanguage } from "@/providers/LanguageProvider";
 
@@ -207,8 +206,8 @@ export default function RegisterPage() {
         <div className="text-center">
           <h2 className="text-2xl font-black text-fg uppercase tracking-tight">
             {t('auth.accountCreated')}
-            {t('auth.accountCreated')}
           </h2>
+          <p className="text-sm text-fg-secondary mt-4">{t('auth.accountCreatedMessage')}</p>
           <p className="text-sm text-fg-secondary mt-4">
             Your account has been successfully created.
           </p>
@@ -216,7 +215,6 @@ export default function RegisterPage() {
             href="/login"
             className="inline-block mt-6 bg-brand hover:bg-brand-dark text-white font-black py-3 px-8 rounded-[10px] transition-all uppercase"
           >
-            {t('auth.goToLogin')}
             {t('auth.goToLogin')}
           </Link>
         </div>
@@ -443,13 +441,13 @@ export default function RegisterPage() {
         </div>
 
         {/* Location Selector */}
-        {/* <LocationSelector
+        <LocationSelector
           value={formData.location}
           onChange={(location) => setFormData((prev) => ({ ...prev, location }))}
           required={true}
           showEstate={true}
           autoDetect={true}
-        /> */}
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
