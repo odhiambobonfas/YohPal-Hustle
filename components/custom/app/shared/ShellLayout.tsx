@@ -8,18 +8,6 @@ import { useLocationCity } from "@/hooks/useLocationCity";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useLanguage } from "@/providers/LanguageProvider";
 
-const PAGE_TITLES: Record<string, string> = {
-  "/dashboard": "Dashboard",
-  "/myjobs": "My Jobs",
-  "/notifications": "Notifications",
-  "/workhistory": "Work History",
-  "/badges": "Badges",
-  "/reviews": "Reviews",
-  "/edit-profile": "Edit Profile",
-  "/help-and-support": "Help & Support",
-  "/settings": "Settings",
-};
-
 export default function ShellLayout({
   children,
 }: {

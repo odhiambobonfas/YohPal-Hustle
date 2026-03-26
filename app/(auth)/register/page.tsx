@@ -22,7 +22,7 @@ export default function RegisterPage() {
     confirmPassword: "",
     referralCode: "",
     agreeToTerms: false,
-    location: { county: "", subCounty: "", estate: "" },
+    // location: { county: "", subCounty: "", estate: "" },
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -176,7 +176,7 @@ export default function RegisterPage() {
         username: formData.username,
         phoneNumber: formData.phoneNumber,
         referralCode: formData.referralCode,
-        location: formData.location,
+        // location: formData.location,
       });
 
       if (response.success) {
@@ -428,6 +428,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
+          <label className="text-xs font-bold text-fg">{t('auth.phoneNumber')}</label>
           <label className="text-xs font-bold text-fg">{t('auth.phoneNumber')}</label>
           <input
             type="tel"

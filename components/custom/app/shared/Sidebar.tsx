@@ -22,6 +22,7 @@ const navItems = [
   { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
+import { useLanguage } from "@/providers/LanguageProvider";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -46,10 +47,10 @@ export default function Sidebar({
     { href: "/myjobs", icon: Briefcase, label: t('nav.myJobs') },
     { href: "/notifications", icon: Bell, label: t('nav.notifications') },
     { href: "/workhistory", icon: History, label: t('nav.workHistory') },
-    { href: "/badges", icon: Award, label: t('nav.badges') },
-    { href: "/reviews", icon: MessageSquare, label: t('nav.reviews') },
-    { href: "/profile", icon: User, label: t('nav.profile') },
-    { href: "/about", icon: Info, label: t('nav.about') },
+    // { href: "/badges", icon: Award, label: t('nav.badges') },
+    // { href: "/reviews", icon: MessageSquare, label: t('nav.reviews') },
+    // { href: "/profile", icon: User, label: t('nav.profile') },
+    // { href: "/about", icon: Info, label: t('nav.about') },
     { href: "/help-and-support", icon: HelpCircle, label: t('nav.helpAndSupport') },
     { href: "/settings", icon: Settings, label: t('nav.settings') },
   ];
@@ -140,7 +141,7 @@ export default function Sidebar({
                       : "text-fg-secondary hover:bg-surface-alt hover:text-fg"
                   }`}
                 >
-                  <Icon size={16} />
+                  {/* <Icon size={16} /> */}
                   <span className="text-[12px] font-medium">{label}</span>
                   {isActive && (
                     <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/60" />
