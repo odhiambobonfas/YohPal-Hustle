@@ -22,7 +22,6 @@ const navItems = [
   { href: "/help-and-support", icon: HelpCircle, label: "Help & Support" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
-import { useLanguage } from "@/providers/LanguageProvider";
 
 interface SidebarProps {
   isOpen?: boolean;
