@@ -9,6 +9,7 @@ import { sendPhoneOTP, verifyPhoneOTP } from "@/services/client/phone-otp";
 import { getAuth } from "firebase/auth";
 import LocationSelector from "@/components/custom/app/shared/LocationSelector";
 import { useLanguage } from "@/providers/LanguageProvider";
+import { normalizePhoneNumber } from "@/utilities/normalize-phone";
 
 export default function RegisterPage() {
   const { t } = useLanguage();
@@ -442,7 +443,7 @@ export default function RegisterPage() {
 
         {/* Location Selector */}
         <LocationSelector
-          value={formData.location}
+          // value={formData.location}
           onChange={(location) => setFormData((prev) => ({ ...prev, location }))}
           required={true}
           showEstate={true}
