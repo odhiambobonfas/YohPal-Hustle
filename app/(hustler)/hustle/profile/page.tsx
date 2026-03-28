@@ -28,7 +28,7 @@ export default function HustlerProfilePage() {
     }
   }, [uid]);
 
-  console.log("This is the data form profile/hustle", hustlerProfile);
+  // console.log("This is the data form profile/hustle", hustlerProfile);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-6">

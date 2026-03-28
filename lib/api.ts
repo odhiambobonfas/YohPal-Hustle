@@ -83,7 +83,7 @@ export async function apiFetchForm<T>(
 // Using the endpoints from the YohpalHustleApis
 
 export function getUserProfile(uid: string): Promise<ProfileResponse> {
-  console.log("Fetching profile for UID:", uid);
+  // console.log("Fetching profile for UID:", uid);
   return apiFetch<ProfileResponse>(`/hustler/profile/${uid}`, {
     method: "GET",
   });
