@@ -12,7 +12,7 @@ import { ProfileResponse } from "@/types/users";
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  "https://yohpal-hustler-apis-live.onrender.com";
+  "http://localhost:5000";
 
 export type ApiResponse<T> = {
   success: boolean;

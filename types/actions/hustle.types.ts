@@ -11,20 +11,20 @@
 
 // ── Job Posting ──────────────────────────────────────────
 export interface PostJobPayload {
-  /** Display title of the job */
-  jobTitle: string;
-  /** Detailed description of what the job entails */
-  description: string;
-  /** The specific role selected from the category (e.g. "Poultry farmer") */
-  role: string;
-  /** ISO datetime string — when the job starts */
-  startDate: string;
-  /** ISO datetime string — when the job ends */
-  endDate: string;
-  /** How many hustlers the client needs */
-  hustlersNeeded: number;
-  /** Optional physical location / address */
-  location?: string;
+  ownerId: string;
+  ownerName: string;
+  jobDetails: {
+    name: string;
+    description: string;
+    startTime: string;
+    endTime: string;
+    hustlersCount: number;
+    hustlers: string[];
+    jobSite: {
+      latitude: number;
+      longitude: number;
+    };
+  };
 }
 
 export interface PostJobResponse {

@@ -1,22 +1,40 @@
-// // ── Job Data Types ─────────────────────────────────────
-// export interface JobData {
-//   jobTitle: string;
-//   description: string;
-//   role: string;
-//   startDate: string;
-//   endDate: string;
-//   hustlersNeeded: number;
-//   location?: string;
-//   status?: string;
-//   createdAt?: string;
-//   [key: string]: any;
-// }
-
-// ── Fetch a Job Document by jobId ──────────────────────
 import { getFirestore, doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
 import firebaseApp from "./firebase";
 
 const db = getFirestore(firebaseApp);
+
+// ── Job Data Types ─────────────────────────────────────
+export interface JobData {
+  jobTitle: string;
+  description: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+  hustlersNeeded: number;
+  location?: string;
+  status?: string;
+  createdAt?: string;
+  [key: string]: any;
+}
+
+// ── Fetch a Job Document by jobId ──────────────────────
+export async function getJobDocument(
+  jobId: string
+): Promise<{ success: boolean; data: JobData | null; message?: string }> {
+  try {
+    const snapshot = await getDoc(doc(db, "jobs", jobId));
+    if (!snapshot.exists()) {
+      return { success: false, data: null, message: "Job not found" };
+    }
+    return { success: true, data: snapshot.data() as JobData };
+  } catch (error: any) {
+    return {
+      success: false,
+      data: null,
+      message: error.message || "Failed to fetch job",
+    };
+  }
+}
 
 export interface UserData {
   firstName: string;

@@ -6,7 +6,7 @@ import type { PostJobPayload, PostJobResponse } from "@/types/actions/hustle.typ
 export async function createJob(payload: PostJobPayload, token: string) {
   try {
     const result = await apiFetch<PostJobResponse>(
-      "/client/post_job",
+      "/jobs/create",
       {
         method: "POST",
         body: JSON.stringify(payload),

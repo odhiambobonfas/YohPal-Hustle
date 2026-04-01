@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTheme } from "@/providers/ThemeProvider";
 import { Sun, Moon, CreditCard, Clock, BarChart3, Compass, UserSearch, MapPin } from "lucide-react";
+import appStoreIcon from "@/assets/images/app store icon.svg";
+import playStoreIcon from "@/assets/images/playstore icon.png";
 
 // ─── Icon Components ──────────────────────────────────────────────────────────
 const MapIcon = () => (
@@ -17,17 +19,7 @@ const ArrowRight = () => (
     <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
   </svg>
 );
-const AppleIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16.365 1.488c1.1-.986 1.83-2.33 1.638-3.702-1.18.06-2.613.82-3.483 1.81-.782.887-1.63 2.228-1.42 3.635 1.258.113 2.528-.68 3.265-1.743z" transform="translate(-1 2)"/>
-    <path d="M16.142 8.358c-.02-2.193 1.785-3.243 1.865-3.29-1.02-1.492-2.61-1.708-3.178-1.734-1.353-.136-2.642.798-3.332.798-.69 0-1.76-.777-2.887-.756-1.484.02-2.854.863-3.626 2.203-1.562 2.705-.4 6.702 1.127 8.905.748 1.082 1.636 2.292 2.805 2.25 1.127-.042 1.558-.725 2.923-.725 1.365 0 1.75.725 2.923.702 1.214-.02 1.972-1.104 2.72-2.187.863-1.26 1.218-2.484 1.24-2.547-.027-.01-2.384-.913-2.58-3.62z" transform="translate(-1 2)"/>
-  </svg>
-);
-const PlayStoreIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3.6 2c-.3 0-.6.2-.6.5v19c0 .3.3.5.6.5.1 0 .3 0 .4-.1l16.1-9.4c.3-.2.3-.6 0-.8L4 2.1c-.1-.1-.2-.1-.4-.1z" />
-  </svg>
-);
+
 const InstagramIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -112,6 +104,40 @@ export default function Home() {
           --muted: #aaa;
           --border: rgba(255,255,255,0.1);
           --card-bg: #1a1a1a;
+        }
+
+        /* App Downloads */
+        .app-download-section {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 28px;
+          padding: 80px 5% 0;
+        }
+        .app-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+          border-radius: 12px;
+          overflow: hidden;
+          width: 200px;
+          height: 64px;
+          background: transparent;
+        }
+        .app-button:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        .dark .app-button:hover {
+          box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+        .app-button img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -339,61 +365,7 @@ export default function Home() {
             .section-title { font-size: 40px; }
         }
 
-        /* Floating Apps */
-        .floating-apps {
-          position: fixed;
-          right: 24px;
-          bottom: 40px;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          z-index: 999;
-        }
-        .floating-btn {
-          background: var(--card-bg);
-          border: 2px solid var(--border);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-          border-radius: 50px;
-          padding: 0 14px;
-          display: flex;
-          align-items: center;
-          color: var(--foreground);
-          transition: max-width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s, color 0.3s, border-color 0.3s;
-          cursor: pointer;
-          height: 56px;
-          max-width: 56px;
-          overflow: hidden;
-          white-space: nowrap;
-          text-decoration: none;
-        }
-        .dark .floating-btn {
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .floating-icon-wrap {
-          min-width: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .floating-text {
-          font-family: 'Sora', sans-serif;
-          font-weight: 700;
-          font-size: 15px;
-          margin-left: 12px;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          transition-delay: 0.1s;
-        }
-        .floating-btn:hover {
-          max-width: 200px;
-          background: var(--primary);
-          color: white;
-          border-color: var(--primary);
-          box-shadow: 0 15px 30px rgba(232,56,13,0.3);
-        }
-        .floating-btn:hover .floating-text {
-          opacity: 1;
-        }
+
       `}</style>
 
       {/* ── NAVBAR ── */}
@@ -455,6 +427,16 @@ export default function Home() {
             <div className="stat-label">{s.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* ── APP DOWNLOAD LINKS ── */}
+      <div className="app-download-section">
+        <a href="https://shorturl.at/lW87i" target="_blank" rel="noopener noreferrer" className="app-button" aria-label="Download on the App Store">
+          <img src={appStoreIcon.src} alt="App Store" />
+        </a>
+        <a href="https://shorturl.at/M1Nfv" target="_blank" rel="noopener noreferrer" className="app-button" aria-label="Get it on Google Play">
+          <img src={playStoreIcon.src} alt="Play Store" />
+        </a>
       </div>
 
       {/* ── HOW IT WORKS ── */}
@@ -611,21 +593,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* ── FLOATING APP BUTTONS ── */}
-      <div className="floating-apps">
-        <a href="https://shorturl.at/lW87i" target="_blank" rel="noopener noreferrer" className="floating-btn" aria-label="App Store">
-          <div className="floating-icon-wrap">
-            <AppleIcon />
-          </div>
-          <span className="floating-text">App Store</span>
-        </a>
-        <a href="https://shorturl.at/M1Nfv" target="_blank" rel="noopener noreferrer" className="floating-btn" aria-label="Play Store">
-          <div className="floating-icon-wrap">
-            <PlayStoreIcon />
-          </div>
-          <span className="floating-text">Play Store</span>
-        </a>
-      </div>
+
     </div>
   );
 }

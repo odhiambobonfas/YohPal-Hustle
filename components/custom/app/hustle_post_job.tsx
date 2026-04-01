@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { ChevronLeft, CheckCircle2, Loader2, Clock, Users, Minus, Plus } from "lucide-react";
 import { submitPostJob } from "@/services/client/jobs";
 import type { PostJobPayload } from "@/types/actions/hustle.types";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 // ─── Description starters ─────────────────────────────────────────────────────
 const DESCRIPTION_SUGGESTIONS = [
@@ -37,6 +38,7 @@ function calcDuration(start: string, end: string): string | null {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobProps) {
+  const { user, displayName } = useCurrentUser();
   const [jobTitle, setJobTitle] = useState(selectedRole);
   const [description, setDescription] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -90,13 +92,26 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
     }
     setLoading(true);
     try {
+      if (!user) {
+        alert("You must be logged in to post a job.");
+        return;
+      }
+      
       const payload: PostJobPayload = {
-        jobTitle,
-        description,
-        role: selectedRole,
-        startDate: new Date(fullStart).toISOString(),
-        endDate: new Date(fullEnd).toISOString(),
-        hustlersNeeded: Number(hustlersCount),
+        ownerId: user.uid,
+        ownerName: displayName || "Anonymous",
+        jobDetails: {
+          name: jobTitle,
+          description: description + (selectedRole ? ` [Role: ${selectedRole}]` : ""),
+          startTime: new Date(fullStart).toISOString(),
+          endTime: new Date(fullEnd).toISOString(),
+          hustlersCount: Number(hustlersCount),
+          hustlers: [],
+          jobSite: {
+            latitude: -1.2921, // Nairobi default
+            longitude: 36.8219,
+          },
+        },
       };
       
       const res = await submitPostJob(payload);
