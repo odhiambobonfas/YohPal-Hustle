@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, CheckCircle2, Loader2, Clock, Users, Minus, Plus } from "lucide-react";
 import { submitPostJob } from "@/services/client/jobs";
 import type { PostJobPayload } from "@/types/actions/hustle.types";
@@ -38,6 +39,7 @@ function calcDuration(start: string, end: string): string | null {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobProps) {
+  const router = useRouter();
   const { user, displayName } = useCurrentUser();
   const [jobTitle, setJobTitle] = useState(selectedRole);
   const [description, setDescription] = useState("");
@@ -116,7 +118,8 @@ export default function HustlePostJob({ selectedRole, onBack }: HustlePostJobPro
       
       const res = await submitPostJob(payload);
       if (res.success) {
-        setSubmitted(true);
+        const jobId = res.data?.jobId || "new";
+        router.push(`/map/matches?jobId=${jobId}&lat=-1.2921&lng=36.8219&title=${encodeURIComponent(jobTitle)}`);
       } else {
         alert(res.message || "Failed to post job. Please try again.");
       }

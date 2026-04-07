@@ -16,6 +16,7 @@ import { useState } from "react";
 import ViewMap from "@/components/custom/app/dashboard/ViewMap";
 import { fetchJobLocation } from "@/services/client/view-map";
 import type { JobLocationData } from "@/types/actions/view-map.types";
+import { auth } from "@/services/server/firebase";
 
 // ── Types ─────────────────────────────────────────────────
 export interface JobDetailData {
@@ -480,7 +481,8 @@ export default function JobDetails({ job }: JobDetailsProps) {
     if (!locationData) {
       setMapLoading(true);
       try {
-        const res = await fetchJobLocation(job.id, "");
+        const token = (await auth.currentUser?.getIdToken()) || "";
+        const res = await fetchJobLocation(job.id, token);
         if (res.success && res.data) setLocationData(res.data);
       } catch {
         // Proceed without coordinates – ViewMap handles the empty state
